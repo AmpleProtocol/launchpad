@@ -1,0 +1,25 @@
+{
+	"name": "@ample-launchpad/core",
+	"version": "0.0.1",
+	"description": "",
+	"main": "index.ts",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsc",
+		"start": "ts-node src/index.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Ample-Stream/launchpad.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Ample-Stream/launchpad/issues"
+	},
+	"homepage": "https://github.com/Ample-Stream/launchpad#readme",
+	"devDependencies": {
+		"ts-node": "^10.9.2",
+		"typescript": "^5.4.3"
+	}
+}
