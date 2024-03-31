@@ -12,14 +12,19 @@
 		"type": "git",
 		"url": "git+https://github.com/Ample-Stream/launchpad.git"
 	},
-	"author": "",
+	"author": "Manuel Rivera <menu.rivera@gmail.com>",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/Ample-Stream/launchpad/issues"
 	},
 	"homepage": "https://github.com/Ample-Stream/launchpad#readme",
 	"devDependencies": {
+		"@types/node": "^20.11.30",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.4.3"
+	},
+	"dependencies": {
+		"@near-wallet-selector/core": "^8.9.5",
+		"near-api-js": "^3.0.4"
 	}
 }
