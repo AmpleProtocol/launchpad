@@ -1,5 +1,5 @@
-import { Contract } from ".";
-import { ISigner } from "../../types/signer.type";
+import { Contract } from "./contract";
+import { ISigner } from '../types';
 
 export class Treasury extends Contract {
 	constructor(signer: ISigner, contractAddress: string) {
