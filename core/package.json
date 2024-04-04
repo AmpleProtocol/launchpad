@@ -14,6 +14,7 @@
 	},
 	"author": "Manuel Rivera <menu.rivera@gmail.com>",
 	"license": "ISC",
+	"license": "Apache-2.0",
 	"bugs": {
 		"url": "https://github.com/Ample-Stream/launchpad/issues"
 	},
