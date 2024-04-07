@@ -1,6 +1,6 @@
 {
 	"name": "@ample-launchpad/core",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -9,7 +9,7 @@
 		"build": "tsup src/index.ts --format cjs,esm --dts",
 		"lint": "tsc",
 		"prepublish": "npm run lint && npm run build",
-		"publish": "npm publish --public"
+		"publish": "npm publish --access public"
 	},
 	"repository": {
 		"type": "git",
