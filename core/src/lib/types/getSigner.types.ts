@@ -38,9 +38,6 @@ export interface IWalletSelectorProps {
 }
 
 export interface IQueryResponseKindCustom extends QueryResponseKind {
-	/**
-		* Polyfilled field
-	*/
 	result: any,
 }
 
