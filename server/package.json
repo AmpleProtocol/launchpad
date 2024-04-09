@@ -9,5 +9,8 @@
 	},
 	"devDependencies": {
 		"nitropack": "latest"
+	},
+	"dependencies": {
+		"@ample-launchpad/core": "^0.0.4"
 	}
 }
