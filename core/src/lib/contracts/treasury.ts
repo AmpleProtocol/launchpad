@@ -23,4 +23,16 @@ export class Treasury extends Contract {
 		})
 	}
 
+
+	/** Sends analytics to the contract for a given content id */
+	addAnalyticsData(contentId: string, streams: number, timestamp: number = Date.now()) {
+		return this.call('add_analytics_data', {
+			bulk_analytics: {
+				content_id: contentId,
+				streams
+			},
+			timestamp
+		})
+	}
+
 }
