@@ -9,7 +9,7 @@ export interface IContractMethodParams {
 	deposit?: string
 }
 
-type Networks = 'mainnet' | 'testnet';
+export type Networks = 'mainnet' | 'testnet';
 
 export interface IServerSideProps {
 	/**
