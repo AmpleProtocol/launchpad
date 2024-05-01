@@ -20,10 +20,11 @@ export class LivepeerProvider implements IProvider {
 		title: string,
 		filename: string,
 		asset: File,
+		collectionId: string,
 		onError?: (error: Error | DetailedError) => void,
 		onProgress?: (bytesUploaded: number, byptesTotal: number) => void,
 		onSuccess?: () => void
-	): Promise<any> {
+	): Promise<string> {
 
 		// generate asset and upload urls
 		const res = await this.livepeer.asset.create({
@@ -32,6 +33,8 @@ export class LivepeerProvider implements IProvider {
 				type: TypeT.Jwt
 			}
 		})
+		if (!res.object?.asset.playbackId) throw new Error('No playbackId for some reason')
+
 		// upload the actual asset
 		// https://docs.livepeer.org/api-reference/asset/upload
 		const upload = new Upload(asset, {
@@ -39,6 +42,7 @@ export class LivepeerProvider implements IProvider {
 			metadata: {
 				filename,
 				filetype: asset.type,
+				collectionId
 			},
 			uploadSize: asset.size,
 			onError,
@@ -48,7 +52,7 @@ export class LivepeerProvider implements IProvider {
 
 		upload.start()
 
-		// handle tokengated relation(?)
+		return res.object?.asset.playbackId
 	}
 
 	async retrieveViewcount(
@@ -61,7 +65,7 @@ export class LivepeerProvider implements IProvider {
 		}
 
 		if (from) query.from = from
-		if (to) query.to = to
+		if (from && to) query.to = to
 
 		// retrieve viewership metrics for this content
 		const res = await this.livepeer.metrics.getViewership(query)

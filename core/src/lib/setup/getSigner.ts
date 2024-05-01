@@ -1,16 +1,21 @@
 import { IWalletSelectorProps, IServerSideProps, IQueryResponseKindCustom, ISigner } from "../types";
 import { Account, KeyPair, connect } from "near-api-js";
 import { InMemoryKeyStore } from "near-api-js/lib/key_stores";
+import { verifySignature, verifyFullKeyBelongsToUser } from "@near-wallet-selector/core";
 import { JsonRpcProvider } from "near-api-js/lib/providers";
+import { stringToUint8Array, uint8ArrayToBase64 } from "../utils";
+
+const RECIPIENT = 'noway.testnet'
+const NONCE = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
 
 /**
 	* Ideal for server side usage
 */
 export const getSignerFromPrivateKey = async ({ network, accountId, privateKey }: IServerSideProps): Promise<ISigner> => {
 	// Create signer using keypair and accounts from near-api-js for server side usage
-	const _pk = KeyPair.fromString(privateKey)
+	const keyPair = KeyPair.fromString(privateKey)
 	const keyStore = new InMemoryKeyStore()
-	await keyStore.setKey(network, accountId, _pk)
+	await keyStore.setKey(network, accountId, keyPair)
 
 	const nearConnection = await connect({
 		networkId: network,
@@ -39,7 +44,20 @@ export const getSignerFromPrivateKey = async ({ network, accountId, privateKey }
 				gas,
 				attachedDeposit: deposit
 			})
-		}
+		},
+		async sign(message) {
+			const msgAsBytes = stringToUint8Array(message)
+			const sig = keyPair.sign(msgAsBytes)
+			const sigAsString = uint8ArrayToBase64(sig.signature)
+			return sigAsString
+		},
+		async verifySignature(message, signature) {
+			const msgAsBytes = stringToUint8Array(message)
+			const sigAsBytes = stringToUint8Array(signature)
+			const isValid = keyPair.verify(msgAsBytes, sigAsBytes)
+
+			return isValid
+		},
 	}
 }
 
@@ -85,7 +103,45 @@ export const getSignerFromWalletSelector = async ({ network, wallet }: IWalletSe
 					},
 				],
 			});
+		},
+		async sign(message, callbackUrl) {
+			if (!wallet.signMessage) {
+				throw new Error(`${wallet.metadata.name} doesn't support signing methods through signMessage() method, consider using a different wallet for wallet-selector`)
+			}
 
-		}
+			if (wallet.type === "browser") {
+				localStorage.setItem(
+					"message",
+					JSON.stringify({
+						message,
+						nonce: [...NONCE],
+						recipient: RECIPIENT,
+						callbackUrl: callbackUrl || location.href,
+					})
+				);
+			}
+
+			const res = await wallet.signMessage({
+				message,
+				nonce: NONCE,
+				recipient: RECIPIENT,
+				callbackUrl: callbackUrl || location.href
+			});
+
+			if (res) return res.signature
+		},
+
+		async verifySignature(message, signature, callbackUrl) {
+			if (!account.publicKey) throw new Error('No publicKey found')
+
+			return verifySignature({
+				message,
+				nonce: NONCE,
+				recipient: RECIPIENT,
+				publicKey: account.publicKey,
+				signature,
+				callbackUrl: callbackUrl || location.href,
+			});
+		},
 	}
 }
