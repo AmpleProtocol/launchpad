@@ -48,7 +48,7 @@ const config: IWalletSelectorProps = {
     wallet
 }
 
-const signer = await getSignerFromPrivateKey(config)
+const signer = await getSignerFromWalletSelector(config)
 ```
 
 3. Instantiate contracts
