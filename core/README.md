@@ -14,12 +14,38 @@ yarn add @ample-launchpad/core
 
 2. Get signer
 ```ts
-import { IServerSideProps, Treasury, getSignerFromPrivateKey } from '@ample-launchpad/core'
+// server side example
+import { IServerSideProps, Treasury, Series, getSignerFromPrivateKey } from '@ample-launchpad/core'
 
 const config: IServerSideProps = {
 	network: process.env.NEAR_NETWORK, 
 	accountId: process.env.NEAR_ACCOUNT_ID,
 	privateKey: process.env.NEAR_PRIVATE_KEY,
+}
+
+const signer = await getSignerFromPrivateKey(config)
+```
+
+```ts
+// client side example using @near-wallet-selector
+import { IWalletSelectorProps, Treasury, Series, getSignerFromWalletSelector } from '@ample-launchpad/core'
+import { setupWalletSelector } from "@near-wallet-selector/core";
+import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
+
+const network =  process.env.NEAR_NETWORK;
+
+const selector = await setupWalletSelector({
+    network,
+    modules: [
+        setupWalletSelector()
+    ]
+})
+
+const wallet = await selector.wallet()
+
+const config: IWalletSelectorProps = {
+    network, 
+    wallet
 }
 
 const signer = await getSignerFromPrivateKey(config)
