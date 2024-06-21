@@ -42,6 +42,10 @@ export default eventHandler(async event => {
 
 	// 3. Check if the user has a valid nft for the contentId from body
 	const hasValidNFT = await series.validNFTForContent(contentId, accountId)
+	if (!hasValidNFT) {
+		setResponseStatus(event, 403)
+		return { success: false, message: 'No valid NFT linked with the provided accountId' }
+	}
 
 	// 4. Sign a new JWT and send it to the user
 	const jwt = await livepeer.createJwt(
