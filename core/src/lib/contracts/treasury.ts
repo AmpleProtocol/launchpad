@@ -10,7 +10,7 @@ export class Treasury extends Contract {
 	async calculateRoyalties(contentId: string): Promise<number> {
 		const res = await this.view<number>('calculate_royalties', {
 			content_id: contentId,
-			account_id: this.signer.address
+			account_id: this.signer.accountId
 		})
 
 		return res * 10 ** -24
