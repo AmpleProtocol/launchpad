@@ -11,6 +11,7 @@
 		"dist/**/*.mjs"
 	],
 	"scripts": {
+		"test": "vitest",
 		"build": "tsup src/index.ts --format cjs,esm --dts",
 		"prepublish": "npm run build",
 		"publish": "npm publish --access public"
@@ -28,7 +29,8 @@
 	"devDependencies": {
 		"@types/node": "^20.11.30",
 		"tsup": "^8.0.2",
-		"typescript": "^5.4.3"
+		"typescript": "^5.4.3",
+		"vitest": "^1.5.3"
 	},
 	"dependencies": {
 		"@livepeer/core": "^3.1.15",
