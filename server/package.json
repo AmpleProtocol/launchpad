@@ -11,6 +11,7 @@
 		"nitropack": "latest"
 	},
 	"dependencies": {
-		"@ample-launchpad/core": "^0.0.4"
+		"@ample-launchpad/core": "^0.0.4",
+		"@near-wallet-selector/core": "^8.9.10"
 	}
 }
