@@ -48,7 +48,7 @@ export default eventHandler(async event => {
 		privateKey,
 		publicKey,
 		playbackId,
-		"https://ampleprotocol.xyz",
+		payload.recipient,
 		{
 			accountId,
 			contentId
