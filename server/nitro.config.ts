@@ -3,6 +3,7 @@ export default defineNitroConfig({
 	srcDir: "server",
 	experimental: {
 		tasks: true,
+		database: true,
 	},
 	scheduledTasks: {
 		// trigger server/tasks/analytics.ts task every 24 hours

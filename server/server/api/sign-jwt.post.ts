@@ -16,15 +16,18 @@ interface IPayload {
 interface IBody {
 	contentId: string,
 	accountId: string,
-	payload: IPayload,
-	playbackId: string
+	playbackId: string,
+	payload: IPayload
 }
 
+/**
+	* Used to issue JWTs that allows streaming tokengated contents
+*/
 export default eventHandler(async event => {
 	const { series } = await useContracts()
 
 	// 1. Get private and public server keys, contentId and payload (sig) from body 
-	const { contentId, accountId, payload, playbackId } = await readBody<IBody>(event)
+	const { contentId, accountId, playbackId, payload } = await readBody<IBody>(event)
 	if (payload.nonce.length != 32) {
 		setResponseStatus(event, 400)
 		return { success: false, message: 'nonce must be 32 bytes long' }
@@ -40,7 +43,7 @@ export default eventHandler(async event => {
 		return { success: false, message: 'Not a valid signature' }
 	}
 
-	// 3. Check if the user has a valid nft for the contentId from body
+	// 3. Check if the user has a valid nft for the given contentId from body
 	const hasValidNFT = await series.validNFTForContent(contentId, accountId)
 	if (!hasValidNFT) {
 		setResponseStatus(event, 403)
