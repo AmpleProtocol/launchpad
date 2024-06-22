@@ -17,8 +17,9 @@ export default eventHandler(async event => {
 	const { assetId, playbackId, tusEndpoint, uploadEndpoint } = await livepeer.createAsset(title)
 
 	// 3. create db record
-	const res = await db.sql`INSERT INTO contents VALUES (
-		${uuid()},
+	const contentId = uuid()
+	await db.sql`INSERT INTO contents VALUES (
+		${contentId},
 		${title},
 		${collectionId},
 		${assetId},
@@ -29,7 +30,7 @@ export default eventHandler(async event => {
 	return {
 		success: true,
 		data: {
-			contentId: res.lastInsertRowid,
+			contentId,
 			tusEndpoint,
 			uploadEndpoint
 		}
