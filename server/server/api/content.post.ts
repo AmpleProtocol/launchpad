@@ -15,6 +15,7 @@ export default eventHandler(async event => {
 
 	// 2. create provider asset (not upload)
 	const { assetId, playbackId, tusEndpoint, uploadEndpoint } = await livepeer.createAsset(title)
+	console.log({ assetId, playbackId, tusEndpoint, uploadEndpoint })
 
 	// 3. create db record
 	const contentId = uuid()

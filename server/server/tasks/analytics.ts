@@ -5,7 +5,7 @@ export default defineTask({
 		name: "analytics",
 		description: "Upload analytics to the treasury"
 	},
-	async run({ payload, context }) {
+	async run(_) {
 		console.log(`[cron:analytics]: cron task started`)
 		const db = useDatabase()
 		const { treasury } = await useContracts()
@@ -16,7 +16,12 @@ export default defineTask({
 		const timestamp = Date.now()
 
 		for (const content of contents) {
-			const lastAnalyticRes = await db.sql`SELECT * FROM analytics WHERE contentId = ${content.id} ORDER BY timestamp DESC LIMIT 1`
+			const lastAnalyticRes = await db.sql`
+				SELECT timestamp FROM analytics 
+				WHERE contentId = ${content.id} 
+				ORDER BY timestamp DESC 
+				LIMIT 1
+			`;
 
 			const fromDate = lastAnalyticRes.rows[0]
 				? new Date(lastAnalyticRes.rows[0].timestamp as number)
