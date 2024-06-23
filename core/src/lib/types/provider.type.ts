@@ -1,5 +1,3 @@
-import { DetailedError } from "tus-js-client"
-
 export interface IJwtProps {
 	jwtPrivateKey: string,
 	jwtPublicKey: string,
@@ -8,20 +6,18 @@ export interface IJwtProps {
 	metadata: any
 }
 
+export interface ICreateAssetResult {
+	assetId: string,
+	playbackId: string,
+	tusEndpoint: string,
+	uploadEndpoint: string,
+}
+
 export interface IProvider {
 	/**
-		* Upload a new tokengated asset
-		* @returns - The referenceId for that asset
+		* Creates a new asset, ready to be loaded with the actual file
 	*/
-	upload(
-		title: string,
-		filename: string,
-		asset: File,
-		collectionId: string,
-		onError?: (error: Error | DetailedError) => void,
-		onProgress?: (bytesUploaded: number, byptesTotal: number) => void,
-		onSuccess?: () => void
-	): Promise<string>,
+	createAsset(title: string): Promise<ICreateAssetResult>,
 
 	/**
 		* Retrieves viewcount for a given content

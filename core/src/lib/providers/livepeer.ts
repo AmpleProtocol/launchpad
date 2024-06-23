@@ -1,5 +1,5 @@
 import { GetViewershipsMetricsRequest } from "livepeer/dist/models/operations";
-import { IProvider } from "../types";
+import { ICreateAssetResult, IProvider } from "../types";
 import { signAccessJwt } from '@livepeer/core/crypto'
 import { Livepeer, SDKProps } from "livepeer";
 import { TypeT } from "livepeer/dist/models/components";
@@ -16,15 +16,9 @@ export class LivepeerProvider implements IProvider {
 		this.livepeer = new Livepeer(sdkProps)
 	}
 
-	async upload(
+	async createAsset(
 		title: string,
-		filename: string,
-		asset: File,
-		collectionId: string,
-		onError?: (error: Error | DetailedError) => void,
-		onProgress?: (bytesUploaded: number, byptesTotal: number) => void,
-		onSuccess?: () => void
-	): Promise<string> {
+	): Promise<ICreateAssetResult> {
 
 		// generate asset and upload urls
 		const res = await this.livepeer.asset.create({
@@ -35,24 +29,12 @@ export class LivepeerProvider implements IProvider {
 		})
 		if (!res.object?.asset.playbackId) throw new Error('No playbackId for some reason')
 
-		// upload the actual asset
-		// https://docs.livepeer.org/api-reference/asset/upload
-		const upload = new Upload(asset, {
-			endpoint: res.object?.tusEndpoint,
-			metadata: {
-				filename,
-				filetype: asset.type,
-				collectionId
-			},
-			uploadSize: asset.size,
-			onError,
-			onSuccess,
-			onProgress
-		})
-
-		upload.start()
-
-		return res.object?.asset.playbackId
+		return {
+			assetId: res.object.asset.id,
+			playbackId: res.object.asset.playbackId,
+			tusEndpoint: res.object.tusEndpoint,
+			uploadEndpoint: res.object.url,
+		}
 	}
 
 	async retrieveViewcount(

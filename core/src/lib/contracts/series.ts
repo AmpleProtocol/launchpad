@@ -15,7 +15,7 @@ export class Series extends Contract {
 	/** Returns an array of series owned by the user */
 	nftSeriesForOwner(type?: 'royalty' | 'rental'): Promise<JsonSerie[]> {
 		return this.view('nft_series_for_owner', {
-			account_id: this.signer.address,
+			account_id: this.signer.accountId,
 			serie_type: type
 		})
 	}
@@ -23,15 +23,15 @@ export class Series extends Contract {
 	/** Returns an array of tokens owned by the user */
 	nftTokensForOwner(serieId?: number): Promise<JsonToken[]> {
 		return this.view('nft_tokens_for_owner', {
-			account_id: this.signer.address,
+			account_id: this.signer.accountId,
 			serie_id: serieId
 		})
 	}
 
 	/** Returns the first valid nft the user has for the contentId provided */
-	validNFTForContent(contentId: string): Promise<{ tokenId: string, expires_at?: number } | null> {
+	validNFTForContent(contentId: string, accountId: string): Promise<{ tokenId: string, expires_at?: number } | null> {
 		return this.view('valid_nft_for_content', {
-			account_id: this.signer.address,
+			account_id: accountId,
 			content_id: contentId
 		})
 	}
@@ -51,7 +51,7 @@ export class Series extends Contract {
 
 		return this.call('nft_mint', {
 			id: JSON.stringify(serieId),
-			receiver_id: this.signer.address
+			receiver_id: this.signer.accountId
 		}, deposit)
 	}
 }
