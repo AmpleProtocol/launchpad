@@ -36,7 +36,6 @@
 		"@livepeer/core": "^3.1.15",
 		"@near-wallet-selector/core": "^8.9.5",
 		"livepeer": "^3.0.2",
-		"near-api-js": "^3.0.4",
-		"tus-js-client": "^4.1.0"
+		"near-api-js": "^3.0.4"
 	}
 }

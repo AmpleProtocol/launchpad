@@ -3,7 +3,6 @@ import { ICreateAssetResult, IProvider } from "../types";
 import { signAccessJwt } from '@livepeer/core/crypto'
 import { Livepeer, SDKProps } from "livepeer";
 import { TypeT } from "livepeer/dist/models/components";
-import { DetailedError, Upload } from "tus-js-client";
 
 
 /**
