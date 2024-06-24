@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20
 
 WORKDIR /app
 
@@ -14,4 +14,4 @@ ENV NODE_ENV=production
 
 RUN npm run build
 
-CMD ["npm", "run", "prepare"]
+CMD ["npm", "run", "preview"]
