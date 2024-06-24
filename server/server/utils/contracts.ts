@@ -4,8 +4,8 @@ export const useContracts = async (): Promise<{ treasury: Treasury, series: Seri
 	// 1. get a new signer
 	const signer = await getSignerFromPrivateKey({
 		network: process.env.NITRO_NEAR_NETWORK as Networks,
-		accountId: process.env.NITRO_ACCOUNT_ID,
-		privateKey: process.env.NITRO_PRIVATE_KEY
+		accountId: process.env.NITRO_NEAR_ACCOUNT_ID,
+		privateKey: process.env.NITRO_NEAR_PRIVATE_KEY
 	})
 
 	// 2. create instances for treasury and series contracts interfaces
