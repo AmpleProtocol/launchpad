@@ -1,0 +1,35 @@
+{
+	"name": "@ample-launchpad/client",
+	"version": "0.0.1",
+	"description": "",
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist/**/*.js",
+		"dist/**/*.d.ts",
+		"dist/**/*.mjs"
+	],
+	"scripts": {
+		"test": "vitest",
+		"build": "tsup src/index.ts --format cjs,esm --dts",
+		"prepublish": "npm run build",
+		"publish": "npm publish --access public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Ample-Stream/launchpad.git"
+	},
+	"author": "Manuel Rivera <menu.rivera@gmail.com>",
+	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/Ample-Stream/launchpad/issues"
+	},
+	"homepage": "https://github.com/Ample-Stream/launchpad#readme",
+	"devDependencies": {
+		"@types/node": "^20.11.30",
+		"tsup": "^8.0.2",
+		"typescript": "^5.4.3",
+		"vitest": "^1.5.3"
+	}
+}
