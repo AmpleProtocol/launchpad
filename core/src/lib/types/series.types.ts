@@ -1,4 +1,4 @@
-interface TokenMetadata {
+export interface TokenMetadata {
 	title: string,
 	description: string,
 	media: string,
@@ -21,3 +21,6 @@ export interface JsonSerie {
 	content_id: string,
 }
 
+export interface Royalty {
+	[accountId: string]: number
+}

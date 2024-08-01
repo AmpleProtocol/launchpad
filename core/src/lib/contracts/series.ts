@@ -1,6 +1,6 @@
 import { utils } from "near-api-js";
 import { Contract } from "./contract";
-import { ISigner, JsonSerie, JsonToken } from "../types";
+import { ISigner, JsonSerie, JsonToken, Royalty, TokenMetadata } from "../types";
 
 export class Series extends Contract {
 	constructor(signer: ISigner, contractAddress: string) {
@@ -53,5 +53,16 @@ export class Series extends Contract {
 			id: JSON.stringify(serieId),
 			receiver_id: this.signer.accountId
 		}, deposit)
+	}
+
+	/** Creates a new collection in the series contract, must be called by an approved creator */
+	createSeries(metadata: TokenMetadata, contentId: string, royalty: Royalty | null, price: string | null, owner: string) {
+		this.call('create_series', {
+			metadata,
+			content_id: contentId,
+			royalty,
+			price,
+			owner,
+		})
 	}
 }
