@@ -61,5 +61,5 @@ export default eventHandler(async event => {
 			contentId
 		}
 	)
-	return { success: true, jwt }
+	return { success: true, data: jwt }
 })
