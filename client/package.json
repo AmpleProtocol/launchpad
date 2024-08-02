@@ -31,5 +31,9 @@
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.3",
 		"vitest": "^1.5.3"
+	},
+	"dependencies": {
+		"@near-wallet-selector/core": "^8.9.11",
+		"axios": "^1.7.2"
 	}
 }
