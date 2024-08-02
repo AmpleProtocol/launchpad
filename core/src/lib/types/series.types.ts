@@ -21,6 +21,14 @@ export interface JsonSerie {
 	content_id: string,
 }
 
+/**
+	* Regular royalty for the NFT compliant with NEP-199
+*/
 export interface Royalty {
 	[accountId: string]: number
+}
+
+export interface TreasuryRoyalty {
+	owner: number,
+	holders: number,
 }
