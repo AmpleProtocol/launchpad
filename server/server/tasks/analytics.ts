@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { nanoid } from "nanoid";
 
 export default defineTask({
 	meta: {
@@ -34,7 +34,7 @@ export default defineTask({
 			await treasury.addAnalyticsData(content.id as string, streams, timestamp)
 
 			await db.sql`INSERT INTO analytics VALUES (
-				${uuid()}, 
+				${nanoid()}, 
 				${timestamp},
 				${streams},
 				${content.id}

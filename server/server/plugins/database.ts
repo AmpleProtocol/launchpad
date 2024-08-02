@@ -1,4 +1,3 @@
-// import { v4 as uuid } from 'uuid'
 export default defineNitroPlugin(async () => {
 	const db = useDatabase()
 	// assert tables are created 
