@@ -46,11 +46,10 @@ export class Launchpad {
 		* publicKey.
 		* See https://github.com/near/NEPs/blob/master/neps/nep-0413.md for reference
 	*/
-	getJwt({ contentId, accountId, playbackId, payload }: IGetJwtParams) {
+	getJwt({ contentId, accountId, payload }: IGetJwtParams) {
 		return this.axios.post<IServerResponse<string>>('/api/sign-jwt', {
 			contentId,
 			accountId,
-			playbackId,
 			payload
 		})
 	}

@@ -16,7 +16,6 @@ interface IPayload {
 interface IBody {
 	contentId: string,
 	accountId: string,
-	playbackId: string,
 	payload: IPayload
 }
 
@@ -25,9 +24,24 @@ interface IBody {
 */
 export default eventHandler(async event => {
 	const { series } = await useContracts()
+	const db = useDatabase()
 
 	// 1. Get private and public server keys, contentId and payload (sig) from body 
-	const { contentId, accountId, playbackId, payload } = await readBody<IBody>(event)
+	const { contentId, accountId, payload } = await readBody<IBody>(event)
+	const res = await db.sql`SELECT playbackId FROM contents WHERE id = ${contentId} LIMIT 1`
+	if (!res.rows) {
+		setResponseStatus(event, 404)
+		return {
+			success: false, message: `No content found with id = ${contentId}`
+		}
+	}
+	if (res.error) {
+		setResponseStatus(event, 500)
+		return { success: false, message: res.error }
+	}
+
+	const playbackId = res.rows[0].playbackId as string
+
 	if (payload.nonce.length != 32) {
 		setResponseStatus(event, 400)
 		return { success: false, message: 'nonce must be 32 bytes long' }

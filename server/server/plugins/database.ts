@@ -25,6 +25,8 @@ export default defineNitroPlugin(async () => {
 		FOREIGN KEY (contentId) REFERENCES contents(id)
 	)`;
 
+	// await db.sql`INSERT INTO contents VALUES ('firstId', 'Some movie', 'someCollectionId', 'somePlaybackId', 'someAssetId')`
+	// [db]: added fake content with id = firstId
 
 	console.log('[db]: tables ready')
 })
