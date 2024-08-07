@@ -33,7 +33,14 @@ export interface ISetupProps {
 /**
 	* Initializes the launchpad, handles signer creation and returns a base Launchpad object 
 */
-export const setupLaunchpad = async ({ network, wallet, provider, serverUrl, treasuryAddress, seriesAddress }: ISetupProps): Promise<Launchpad> => {
+export const setupLaunchpad = async ({
+	network,
+	wallet,
+	provider,
+	serverUrl,
+	treasuryAddress,
+	seriesAddress
+}: ISetupProps): Promise<Launchpad> => {
 
 	const signer = await getSignerFromWalletSelector({ network, wallet })
 

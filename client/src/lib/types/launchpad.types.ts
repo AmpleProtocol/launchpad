@@ -26,3 +26,11 @@ export interface IGetJwtParams {
 	playbackId: string,
 	payload: IPayload
 }
+
+export interface IContent {
+	id: string,
+	title: string,
+	collectionId: number,
+	playbackId: string,
+	assetId: string
+}

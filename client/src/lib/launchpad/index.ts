@@ -1,13 +1,12 @@
 import { IProvider, Series, Treasury } from '@ample-launchpad/core'
 import axios, { Axios } from 'axios'
-import { ICreateContentParams, IGetJwtParams } from '../types/launchpad.types'
-import { Wallet } from '@near-wallet-selector/core'
+import { IContent, ICreateContentParams, IGetJwtParams } from '../types/launchpad.types'
 
 export interface IContracts {
 	treasury: Treasury,
 	series: Series,
 }
-interface IServerResponse<T> {
+interface IServerResponse<T = any> {
 	success: boolean,
 	data: T
 }
@@ -56,5 +55,18 @@ export class Launchpad {
 		})
 	}
 
-}
+	/**
+		* Returns all of the contents stored in server db
+	*/
+	getContents() {
+		// todo: add query params
+		return this.axios.get<IServerResponse<IContent[]>>('/api/content')
+	}
 
+	/**
+		* Returns full information about a specific content 
+	*/
+	getContent(id: string) {
+		return this.axios.get<IServerResponse<IContent>>(`/api/content/${id}`)
+	}
+}
