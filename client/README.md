@@ -56,6 +56,9 @@ await launchpad.contracts.treasury.claimRoyalties(/* contentId */)
 
 // nfts 
 const serieDetails = await launchpad.contracts.series.getSeriesDetails(/* serieId */)
-const ownedNftSeries = await launchpad.contracts.series.nftSeriesForOwner('royalty')
+const ownedNftSeries = await launchpad.contracts.series.nftSeriesForOwner()
 await launchpad.contracts.series.mint(/* serieId */)
+
+// provider 
+const streamingUrl = launchpad.provider.getStreamingUrl(/* playbackId, jwt */)
 ```

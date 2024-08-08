@@ -8,14 +8,15 @@ export interface IContracts {
 }
 interface IServerResponse<T = any> {
 	success: boolean,
-	data: T
+	data?: T,
+	message?: string
 }
 
 /**
 	* Main class of the module
-	*/
+*/
 export class Launchpad {
-	axios: Axios
+	private axios: Axios
 
 	constructor(
 		serverUrl: string,
@@ -46,12 +47,16 @@ export class Launchpad {
 		* publicKey.
 		* See https://github.com/near/NEPs/blob/master/neps/nep-0413.md for reference
 	*/
-	getJwt({ contentId, accountId, payload }: IGetJwtParams) {
-		return this.axios.post<IServerResponse<string>>('/api/sign-jwt', {
+	async getJwt({ contentId, accountId, payload }: IGetJwtParams): Promise<string> {
+		const res = await this.axios.post<IServerResponse<string>>('/api/sign-jwt', {
 			contentId,
 			accountId,
 			payload
 		})
+		if (res.data.success && res.data.data) {
+			return res.data.data
+		}
+		throw new Error(res.data.message)
 	}
 
 	/**
