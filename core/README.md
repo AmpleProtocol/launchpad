@@ -1,5 +1,5 @@
 # Ample Launchpad | Core Package
-Core functionality for the launchpad\
+Core functionality for the launchpad
 (Work in progress...)
 
 ## Usage

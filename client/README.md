@@ -1,5 +1,6 @@
 # Ample Launchpad | Client Package
 Main component for direct manipulation of a launchpad deployment.
+(Work in progress...)
 
 ## Quickstart
 This guide assumes you have already deployed a [server](../server/README.md) and the Ample Contracts ([Treasury](https://github.com/AmpleProtocol/treasury), [Series](https://github.com/AmpleProtocol/nft-series)).
@@ -34,7 +35,7 @@ const init = async () => {
 
     // get the actual launchpad instance
     const launchpad = await setupLaunchpad({
-        network: 'tesnet',
+        network: 'testnet',
         wallet,
         provider,
         serverUrl: process.env.SERVER_URL,
