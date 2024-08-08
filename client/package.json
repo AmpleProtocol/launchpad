@@ -18,14 +18,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Ample-Stream/launchpad.git"
+		"url": "git+https://github.com/AmpleProtocol/launchpad.git"
 	},
 	"author": "Manuel Rivera <menu.rivera@gmail.com>",
 	"license": "Apache-2.0",
 	"bugs": {
-		"url": "https://github.com/Ample-Stream/launchpad/issues"
+		"url": "https://github.com/AmpleProtocol/launchpad/issues"
 	},
-	"homepage": "https://github.com/Ample-Stream/launchpad#readme",
+	"homepage": "https://github.com/AmpleProtocol/launchpad#readme",
 	"devDependencies": {
 		"@types/node": "^20.11.30",
 		"tsup": "^8.0.2",
