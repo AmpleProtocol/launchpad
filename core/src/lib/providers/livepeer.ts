@@ -15,6 +15,13 @@ export class LivepeerProvider implements IProvider {
 		this.livepeer = new Livepeer(sdkProps)
 	}
 
+	getStreamingUrl(referenceId: string, jwt?: string | undefined): string {
+		if (jwt) {
+			return `https://playback.livepeer.studio/asset/hls/${referenceId}/index.m3u8?jwt=${jwt}`
+		}
+		return `https://playback.livepeer.studio/asset/hls/${referenceId}/index.m3u8`
+	}
+
 	async createAsset(
 		title: string,
 	): Promise<ICreateAssetResult> {

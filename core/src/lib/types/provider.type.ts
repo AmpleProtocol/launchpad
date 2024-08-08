@@ -15,6 +15,14 @@ export interface ICreateAssetResult {
 
 export interface IProvider {
 	/**
+		* Forms the streaming url (hls) for a given referenceId, a jwt can be 
+		* included for token gated contents
+		* @param referenceId - the reference id of the asset to be streamed
+		* @param jwt - The jwt for accessing tokengated contents
+	*/
+	getStreamingUrl(referenceId: string, jwt?: string): string,
+
+	/**
 		* Creates a new asset, ready to be loaded with the actual file
 	*/
 	createAsset(title: string): Promise<ICreateAssetResult>,
