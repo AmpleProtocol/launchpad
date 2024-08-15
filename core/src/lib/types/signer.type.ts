@@ -1,4 +1,4 @@
-import { FinalExecutionOutcome } from "@near-wallet-selector/core";
+import { FinalExecutionOutcome } from "near-api-js/lib/providers";
 import { IContractMethodParams } from "./getSigner.types";
 
 export interface ISigner {

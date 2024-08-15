@@ -1,8 +1,8 @@
-import { GetViewershipsMetricsRequest } from "livepeer/dist/models/operations";
 import { ICreateAssetResult, IProvider } from "../types";
 import { signAccessJwt } from '@livepeer/core/crypto'
-import { Livepeer, SDKProps } from "livepeer";
-import { TypeT } from "livepeer/dist/models/components";
+import { Livepeer, SDKOptions } from "livepeer";
+import { Type } from "livepeer/models/components";
+import { GetViewershipMetricsRequest } from "livepeer/models/operations";
 
 
 /**
@@ -11,8 +11,8 @@ import { TypeT } from "livepeer/dist/models/components";
 export class LivepeerProvider implements IProvider {
 	livepeer: Livepeer
 
-	constructor(sdkProps: SDKProps) {
-		this.livepeer = new Livepeer(sdkProps)
+	constructor(sdkOptions: SDKOptions) {
+		this.livepeer = new Livepeer(sdkOptions)
 	}
 
 	getStreamingUrl(referenceId: string, jwt?: string | undefined): string {
@@ -30,16 +30,16 @@ export class LivepeerProvider implements IProvider {
 		const res = await this.livepeer.asset.create({
 			name: title,
 			playbackPolicy: {
-				type: TypeT.Jwt
+				type: Type.Jwt
 			}
 		})
-		if (!res.object?.asset.playbackId) throw new Error('No playbackId for some reason')
+		if (!res.data?.asset.playbackId) throw new Error('No playbackId for some reason')
 
 		return {
-			assetId: res.object.asset.id,
-			playbackId: res.object.asset.playbackId,
-			tusEndpoint: res.object.tusEndpoint,
-			uploadEndpoint: res.object.url,
+			assetId: res.data.asset.id,
+			playbackId: res.data.asset.playbackId,
+			tusEndpoint: res.data.tusEndpoint,
+			uploadEndpoint: res.data.url,
 		}
 	}
 
@@ -48,7 +48,7 @@ export class LivepeerProvider implements IProvider {
 		from?: Date | undefined,
 		to?: Date | undefined
 	): Promise<number> {
-		let query: GetViewershipsMetricsRequest = {
+		let query: GetViewershipMetricsRequest = {
 			playbackId: referenceId,
 		}
 
@@ -58,11 +58,11 @@ export class LivepeerProvider implements IProvider {
 		// retrieve viewership metrics for this content
 		const res = await this.livepeer.metrics.getViewership(query)
 
-		if (!res || !res.classes) return 0
+		if (!res || !res.data) return 0
 
 		// get total viewCount
 		let viewCount: number = 0;
-		for (let metric of res.classes) {
+		for (let metric of res.data) {
 			viewCount += metric.viewCount
 		}
 
