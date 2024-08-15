@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ample-launchpad/client": "workspace:*",
+    "@ample-launchpad/ui": "workspace:*",
+    "@ample-launchpad/core": "workspace:*",
     "@near-wallet-selector/core": "^8.9.12",
     "@near-wallet-selector/modal-ui": "^8.9.12",
     "@near-wallet-selector/my-near-wallet": "^8.9.12",

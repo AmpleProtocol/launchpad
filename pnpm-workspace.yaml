@@ -1,0 +1,6 @@
+packages:
+  - 'client'
+  - 'core'
+  - 'server'
+  - 'ui'
+  - 'example'
