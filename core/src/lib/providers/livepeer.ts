@@ -76,6 +76,9 @@ export class LivepeerProvider implements IProvider {
 		issuer: string,
 		metadata: any
 	): Promise<string> {
+		if (typeof window !== 'undefined') {
+			throw new Error('createJwt() is not available in the browser')
+		}
 		return signAccessJwt({
 			privateKey: jwtPrivateKey,
 			publicKey: jwtPublicKey,
