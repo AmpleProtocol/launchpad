@@ -15,7 +15,7 @@ pnpm install
 First, run the development server:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Start Development Server
@@ -23,5 +23,5 @@ npm run build
 Start the development server:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
