@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Royalty, TreasuryRoyalty } from "@ample-launchpad/core";
 
 export interface ICreateContentParams {

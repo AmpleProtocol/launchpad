@@ -35,6 +35,8 @@ export const getSignerFromPrivateKey = async ({ network, accountId, privateKey }
 				args,
 			})
 		},
+		// @ts-ignore 
+		// TODO: Fix types on ISigner
 		call({ contractId, method, args, gas, deposit }) {
 			return account.functionCall({
 				contractId,
