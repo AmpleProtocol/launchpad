@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "pnpm run build:core && pnpm run build:client && pnpm run build:server && pnpm run build:ui",
+    "build": "pnpm run -r build",
     "build:core": "pnpm --filter @ample-launchpad/core build",
     "build:client": "pnpm --filter @ample-launchpad/client build",
     "build:server": "pnpm --filter @ample-launchpad/server build",

@@ -1,5 +1,5 @@
 {
-	"name": "server",
+	"name": "@ample-launchpad/server",
 	"author": "Manuel Rivera <menu.rivera@gmail.com>",
 	"license": "Apache-2.0",
 	"scripts": {
