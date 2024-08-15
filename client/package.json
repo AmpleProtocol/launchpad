@@ -33,6 +33,7 @@
 		"vitest": "^1.5.3"
 	},
 	"dependencies": {
+		"@ample-launchpad/core": "workspace:*",
 		"@near-wallet-selector/core": "^8.9.11",
 		"axios": "^1.7.2"
 	}

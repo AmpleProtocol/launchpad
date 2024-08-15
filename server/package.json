@@ -1,4 +1,5 @@
 {
+	"name": "server",
 	"author": "Manuel Rivera <menu.rivera@gmail.com>",
 	"license": "Apache-2.0",
 	"scripts": {
@@ -13,7 +14,7 @@
 		"nitropack": "latest"
 	},
 	"dependencies": {
-		"@ample-launchpad/core": "^0.0.7",
+		"@ample-launchpad/core": "workspace:*",
 		"@near-wallet-selector/core": "^8.9.10",
 		"nanoid": "^5.0.7"
 	}
