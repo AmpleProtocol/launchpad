@@ -1,5 +1,7 @@
 import { createContext, ReactNode, useContext } from "react";
 import { Launchpad } from '@ample-launchpad/client'
+import { ThemeUIProvider } from "theme-ui";
+import { theme } from "../theme";
 
 // CONTEXT
 const AmpleLaunchpadContext = createContext<Launchpad | null>(null)
@@ -9,9 +11,11 @@ export const AmpleLaunchpadProvider: React.FC<{
 	children: ReactNode,
 	launchpad: Launchpad
 }> = ({ children, launchpad }) => {
-	return <AmpleLaunchpadContext.Provider value={launchpad}>
-		{children}
-	</AmpleLaunchpadContext.Provider>
+	return <ThemeUIProvider theme={theme}>
+		<AmpleLaunchpadContext.Provider value={launchpad}>
+			{children}
+		</AmpleLaunchpadContext.Provider>
+	</ThemeUIProvider>
 }
 
 // HOOK
