@@ -36,12 +36,14 @@ export const getSignerFromPrivateKey = async ({ network, accountId, privateKey }
 			})
 		},
 		call({ contractId, method, args, gas, deposit }) {
+			const _gas = gas ? BigInt(gas) : undefined
+			const attachedDeposit = deposit ? BigInt(deposit) : undefined
 			return account.functionCall({
 				contractId,
 				methodName: method,
 				args,
-				gas,
-				attachedDeposit: deposit
+				attachedDeposit,
+				gas: _gas,
 			})
 		},
 	}
