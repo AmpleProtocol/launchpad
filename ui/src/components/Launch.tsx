@@ -1,19 +1,15 @@
-import { Box, Grid, Input, Label, Spinner } from "theme-ui"
+import { Box, Grid, Input, Label, Spinner, Text } from "theme-ui"
 import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./common/ErrorMessage";
 import { ICreateContentParams } from "@ample-launchpad/client";
 import { useState } from "react";
-
-// fields left
-// export interface ICreateContentParams {
-// 	owner: string,
-// 	royalty: Royalty,
-// 	treasuryRoyalty: TreasuryRoyalty
-// }
+import { Upload } from "tus-js-client";
 
 interface IFormData extends ICreateContentParams {
-	file: FileList
+	file: FileList,
+	ownerRoyalty: number,
+	holdersRoyalty: number
 }
 
 interface ICreateContentResponse {
@@ -29,22 +25,55 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated }) => {
 	const { createContent } = useLaunchpad()
 	const { handleSubmit, register, formState: { errors } } = useForm<IFormData>()
 	const [loading, setLoading] = useState<boolean>(false)
+	const [progress, setProgress] = useState<string | null>(null)
 
 	/**
 		* Create the content and launch the collection
 	*/
 	const onSubmit: SubmitHandler<IFormData> = async (data) => {
-		setLoading(true)
-		// create the content and collection
-		const res = await createContent(data)
+		const file = data.file.item(0)
+		if (!file) return
 
-		// start uploading the file
-		// notify user back about the created content
-		onContentCreated && onContentCreated({
-			contentId: res.data.data!.contentId,
-			collectionId: res.data.data!.collectionId
+		setLoading(true)
+
+		// create the content and collection
+		const res = await createContent({
+			...data,
+			treasuryRoyalty: {
+				owner: data.ownerRoyalty,
+				holders: data.holdersRoyalty
+			}
 		})
-		setLoading(false)
+		if (!res.data.success) throw new Error(res.data.message!)
+
+		// create a new Upload 
+		const upload = new Upload(file, {
+			endpoint: res.data.data?.tusEndpoint,
+			retryDelays: [0, 3000, 5000, 10000, 20000],
+			metadata: {
+				filename: file.name,
+				filetype: file.type,
+			},
+			onError: (error) => {
+				alert(`Upload failed\n${error}`)
+				console.error(error)
+			},
+			onProgress: (bytesUploaded, bytesTotal) => {
+				const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
+				setProgress(percentage)
+			},
+			onSuccess: () => {
+				// notify user back about the created content
+				setLoading(false)
+				setProgress(null)
+				onContentCreated && onContentCreated({
+					contentId: res.data.data!.contentId,
+					collectionId: res.data.data!.collectionId
+				})
+			},
+		})
+
+		upload.start()
 	}
 
 	return <Grid>
@@ -79,6 +108,23 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated }) => {
 					<Input type="url" {...register('mediaUrl', { required: 'Media url is required' })} />
 				</Label>
 				<ErrorMessage fieldError={errors.mediaUrl} />
+				<Label>
+					Owner
+					<Input {...register('owner', { required: 'Owner is required' })} />
+				</Label>
+				<ErrorMessage fieldError={errors.owner} />
+
+				<h2>Royalty</h2>
+				<Label>
+					Owner royalty
+					<Input {...register('ownerRoyalty', { required: 'This field is required' })} />
+				</Label>
+				<ErrorMessage fieldError={errors.ownerRoyalty} />
+				<Label>
+					Holders royalty
+					<Input {...register('holdersRoyalty', { required: 'This field is required' })} />
+				</Label>
+				<ErrorMessage fieldError={errors.holdersRoyalty} />
 			</Box>
 
 			{/* media field */}
@@ -90,6 +136,7 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated }) => {
 				<ErrorMessage fieldError={errors.file} />
 
 				{loading && <Spinner />}
+				{progress && <Text>Progress: {progress}</Text>}
 				<Input type="submit" disabled={loading} />
 			</Box>
 		</Box>
