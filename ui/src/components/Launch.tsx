@@ -1,4 +1,4 @@
-import { Box, Grid, Input, Label, Spinner, Text } from "theme-ui"
+import { Box, Grid, Input, Label, Spinner } from "theme-ui"
 import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./common/ErrorMessage";
@@ -18,14 +18,14 @@ interface ICreateContentResponse {
 }
 
 interface ILaunchProps {
-	onContentCreated?: (newContent: ICreateContentResponse) => any
+	onContentCreated?: (newContent: ICreateContentResponse) => any,
+	onProgress?: (progress: number) => any
 }
 
-export const Launch: React.FC<ILaunchProps> = ({ onContentCreated }) => {
+export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress }) => {
 	const { createContent } = useLaunchpad()
 	const { handleSubmit, register, formState: { errors } } = useForm<IFormData>()
 	const [loading, setLoading] = useState<boolean>(false)
-	const [progress, setProgress] = useState<string | null>(null)
 
 	/**
 		* Create the content and launch the collection
@@ -60,12 +60,11 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated }) => {
 			},
 			onProgress: (bytesUploaded, bytesTotal) => {
 				const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
-				setProgress(percentage)
+				onProgress && onProgress(Number(percentage))
 			},
 			onSuccess: () => {
 				// notify user back about the created content
 				setLoading(false)
-				setProgress(null)
 				onContentCreated && onContentCreated({
 					contentId: res.data.data!.contentId,
 					collectionId: res.data.data!.collectionId
@@ -136,7 +135,6 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated }) => {
 				<ErrorMessage fieldError={errors.file} />
 
 				{loading && <Spinner />}
-				{progress && <Text>Progress: {progress}</Text>}
 				<Input type="submit" disabled={loading} />
 			</Box>
 		</Box>
