@@ -44,10 +44,10 @@ export const setupLaunchpad = async ({
 
 	const signer = await getSignerFromWalletSelector({ network, wallet })
 
-	const contracs: IContracts = {
+	const contracts: IContracts = {
 		treasury: new Treasury(signer, treasuryAddress),
 		series: new Series(signer, seriesAddress),
 	}
 
-	return new Launchpad(serverUrl, contracs, provider)
+	return new Launchpad(serverUrl, wallet, contracts, provider)
 }

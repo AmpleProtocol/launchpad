@@ -22,7 +22,6 @@ export interface IPayload {
 
 export interface IGetJwtParams {
 	contentId: string,
-	accountId: string,
 	payload: IPayload
 }
 

@@ -1,6 +1,7 @@
 import { IProvider, Series, Treasury } from '@ample-launchpad/core'
 import axios, { Axios } from 'axios'
 import { IContent, ICreateContentParams, IGetJwtParams } from '../types/launchpad.types'
+import { Wallet } from '@near-wallet-selector/core'
 
 export interface IContracts {
 	treasury: Treasury,
@@ -20,6 +21,7 @@ export class Launchpad {
 
 	constructor(
 		serverUrl: string,
+		public wallet: Wallet,
 		public contracts: IContracts,
 		public provider: IProvider,
 	) {
@@ -47,10 +49,12 @@ export class Launchpad {
 		* publicKey.
 		* See https://github.com/near/NEPs/blob/master/neps/nep-0413.md for reference
 	*/
-	async getJwt({ contentId, accountId, payload }: IGetJwtParams): Promise<string> {
+	async getJwt({ contentId, payload }: IGetJwtParams): Promise<string> {
+		const accounts = await this.wallet.getAccounts()
+
 		const res = await this.axios.post<IServerResponse<string>>('/api/sign-jwt', {
 			contentId,
-			accountId,
+			accountId: accounts[0].accountId,
 			payload
 		})
 		if (res.data.success && res.data.data) {
