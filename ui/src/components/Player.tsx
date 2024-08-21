@@ -115,6 +115,3 @@ export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
 	</>
 }
 
-
-// notas de Raul
-// Acá en Tequila
