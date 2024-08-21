@@ -6,7 +6,7 @@ import { ICreateContentParams } from "@ample-launchpad/client";
 import { useState } from "react";
 import { Upload } from "tus-js-client";
 
-interface IFormData extends ICreateContentParams {
+interface IFormData extends Omit<ICreateContentParams, 'treasuryRoyalty'> {
 	file: FileList,
 	ownerRoyalty: number,
 	holdersRoyalty: number
