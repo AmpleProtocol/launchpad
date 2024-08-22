@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useLaunchpad } from "../context"
-import { IPayload } from "@ample-launchpad/client"
+import { IContent, IPayload } from "@ample-launchpad/client"
 import type { SignedMessage, SignMessageParams } from "@near-wallet-selector/core";
+
+import 'video.js/dist/video-js.css'
+import { VideoPlayer } from "@videojs-player/react";
 
 interface IPlayerProps {
 	contentId: string,
@@ -14,14 +17,21 @@ interface IPlayerProps {
 	* 4. Get a new JWT using getJwt() and store it in LS
 */
 export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
-	const { getJwt, wallet } = useLaunchpad()
+	const { getJwt, getContent, wallet, provider } = useLaunchpad()
 	const [jwt, setJwt] = useState<string | null>(null)
+	const [content, setContent] = useState<IContent | null>(null)
+
+	useEffect(() => {
+		fetchContent()
+	}, [])
 
 	useEffect(() => {
 		// check for jwt in local storage
 		// if not there, check for the url for signatures to get access 
 		// if none of the above, sign a new message
 		if (!jwt) {
+			// whenever any of these functions updates the state (jwt); the useEffect 
+			// execution will terminate and rerun it
 			checkForJwt()
 			checkForSignatureInUrl()
 			signMessage()
@@ -96,6 +106,18 @@ export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
 		}
 	};
 
+	const fetchContent = async () => {
+		const res = await getContent(contentId)
+		if (!res.data.data) throw new Error('Content not found')
+		if (!res.data.success) throw new Error(res.data.message!)
+		setContent(res.data.data)
+	}
+
+	const hlsUrl = useMemo<string | null>(() => {
+		if (!jwt || !content) return null
+		return provider.getStreamingUrl(content.playbackId, jwt)
+	}, [jwt, content])
+
 	const constructPayload = (
 		{ publicKey, signature }: SignedMessage,
 		{ message, recipient, nonce }: SignMessageParams
@@ -110,8 +132,9 @@ export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
 		}
 	}
 
+	if (!hlsUrl) return null
 
-	return <>
-	</>
+	// return hls video player
+	return <VideoPlayer src={hlsUrl} controls loop={false} />
 }
 
