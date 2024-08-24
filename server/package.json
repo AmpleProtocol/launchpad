@@ -15,6 +15,7 @@
 	},
 	"dependencies": {
 		"@ample-launchpad/core": "workspace:*",
+		"@livepeer/core": "^3.2.5",
 		"@near-wallet-selector/core": "^8.9.10",
 		"nanoid": "^5.0.7"
 	}
