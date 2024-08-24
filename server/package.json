@@ -4,7 +4,7 @@
 	"license": "Apache-2.0",
 	"scripts": {
 		"build": "nitro build",
-		"dev": "nitro dev",
+		"dev": "PORT=5000 nitro dev",
 		"prepare": "nitro prepare",
 		"preview": "node .output/server/index.mjs"
 	},
