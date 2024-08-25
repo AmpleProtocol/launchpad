@@ -17,21 +17,24 @@ importers:
         specifier: ^8.9.11
         version: 8.9.12
       axios:
-        specifier: ^1.7.2
-        version: 1.7.4
+        specifier: ^1.7.5
+        version: 1.7.5
+      supports-color:
+        specifier: 8.1.1
+        version: 8.1.1
     devDependencies:
       '@types/node':
         specifier: ^20.11.30
         version: 20.14.15
       tsup:
         specifier: ^8.0.2
-        version: 8.2.4(jiti@1.21.6)(postcss@8.4.41)(typescript@5.5.4)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.41)(supports-color@8.1.1)(typescript@5.5.4)
       typescript:
         specifier: ^5.4.3
         version: 5.5.4
       vitest:
         specifier: ^1.5.3
-        version: 1.6.0(@types/node@20.14.15)(terser@5.31.6)
+        version: 1.6.0(@types/node@20.14.15)(supports-color@8.1.1)(terser@5.31.6)
 
   core:
     dependencies:
@@ -53,13 +56,13 @@ importers:
         version: 0.3.0(esbuild@0.23.0)
       tsup:
         specifier: ^8.0.2
-        version: 8.2.4(jiti@1.21.6)(postcss@8.4.41)(typescript@5.5.4)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.41)(supports-color@8.1.1)(typescript@5.5.4)
       typescript:
         specifier: ^5.4.3
         version: 5.5.4
       vitest:
         specifier: ^1.5.3
-        version: 1.6.0(@types/node@20.14.15)(terser@5.31.6)
+        version: 1.6.0(@types/node@20.14.15)(supports-color@8.1.1)(terser@5.31.6)
 
   example:
     dependencies:
@@ -154,7 +157,8 @@ importers:
         version: 18.3.1
       react-hook-form:
         specifier: ^7.52.2
-        version: 7.52.2(react@18.3.1)
+        version: 7.53.0(react@18.3.1)
+
       theme-ui:
         specifier: ^0.16.2
         version: 0.16.2(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
@@ -170,7 +174,7 @@ importers:
         version: 20.14.15
       tsup:
         specifier: ^8.0.2
-        version: 8.2.4(jiti@1.21.6)(postcss@8.4.41)(typescript@5.5.4)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.41)(supports-color@8.1.1)(typescript@5.5.4)
       typescript:
         specifier: ^5.4.3
         version: 5.5.4
@@ -1650,8 +1654,8 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  axios@1.7.4:
-    resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
+  axios@1.7.5:
+    resolution: {integrity: sha512-fZu86yCo+svH3uqJ/yTdQ0QHpQu5oL+/QE+QPSv6BZSkDAoky9vytxp7u5qk83OJFS3kEBcesWni9WTZAv3tSw==}
 
   b4a@1.6.6:
     resolution: {integrity: sha512-5Tk1HLk6b6ctmjIkAcU/Ujv/1WqiDl0F0JdRCR80VsOcUlHcu7pWeWRlOqQLHfDEsVx9YH/aif5AG4ehoCtTmg==}
@@ -3404,8 +3408,9 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
-  react-hook-form@7.52.2:
-    resolution: {integrity: sha512-pqfPEbERnxxiNMPd0bzmt1tuaPcVccywFDpyk2uV5xCIBphHV5T8SVnX9/o3kplPE1zzKt77+YIoq+EMwJp56A==}
+  react-hook-form@7.53.0:
+    resolution: {integrity: sha512-M1n3HhqCww6S2hxLxciEXy2oISPnAzxY7gvwVPrtlczTM/1dDadXgUxDpHMrMTblDOcm/AXtXxHwZ3jpg1mqKQ==}
+
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -4274,7 +4279,7 @@ snapshots:
       '@babel/traverse': 7.25.3
       '@babel/types': 7.25.2
       convert-source-map: 2.0.0
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -4446,7 +4451,7 @@ snapshots:
       '@babel/parser': 7.25.3
       '@babel/template': 7.25.0
       '@babel/types': 7.25.2
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -5669,7 +5674,7 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -5745,7 +5750,7 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios@1.7.4:
+  axios@1.7.5:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
@@ -6132,9 +6137,11 @@ snapshots:
     dependencies:
       ms: 2.0.0
 
-  debug@4.3.6:
+  debug@4.3.6(supports-color@8.1.1):
     dependencies:
       ms: 2.1.2
+    optionalDependencies:
+      supports-color: 8.1.1
 
   decamelize@1.2.0: {}
 
@@ -6604,7 +6611,7 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -6649,7 +6656,7 @@ snapshots:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
       denque: 2.1.0
       lodash.defaults: 4.2.0
       lodash.isarguments: 3.1.0
@@ -6765,7 +6772,7 @@ snapshots:
 
   istanbul-lib-source-maps@4.0.1:
     dependencies:
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
       istanbul-lib-coverage: 3.2.2
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -7819,7 +7826,8 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-hook-form@7.52.2(react@18.3.1):
+  react-hook-form@7.53.0(react@18.3.1):
+
     dependencies:
       react: 18.3.1
 
@@ -8303,13 +8311,13 @@ snapshots:
 
   tslib@2.6.3: {}
 
-  tsup@8.2.4(jiti@1.21.6)(postcss@8.4.41)(typescript@5.5.4):
+  tsup@8.2.4(jiti@1.21.6)(postcss@8.4.41)(supports-color@8.1.1)(typescript@5.5.4):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.0)
       cac: 6.7.14
       chokidar: 3.6.0
       consola: 3.2.3
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
       esbuild: 0.23.0
       execa: 5.1.1
       globby: 11.1.0
@@ -8498,10 +8506,11 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@1.6.0(@types/node@20.14.15)(terser@5.31.6):
+  vite-node@1.6.0(@types/node@20.14.15)(supports-color@8.1.1)(terser@5.31.6):
+
     dependencies:
       cac: 6.7.14
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
       pathe: 1.1.2
       picocolors: 1.0.1
       vite: 5.4.1(@types/node@20.14.15)(terser@5.31.6)
@@ -8526,7 +8535,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.6
 
-  vitest@1.6.0(@types/node@20.14.15)(terser@5.31.6):
+  vitest@1.6.0(@types/node@20.14.15)(supports-color@8.1.1)(terser@5.31.6):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -8535,7 +8544,7 @@ snapshots:
       '@vitest/utils': 1.6.0
       acorn-walk: 8.3.3
       chai: 4.5.0
-      debug: 4.3.6
+      debug: 4.3.6(supports-color@8.1.1)
       execa: 8.0.1
       local-pkg: 0.5.0
       magic-string: 0.30.11
@@ -8546,7 +8555,7 @@ snapshots:
       tinybench: 2.9.0
       tinypool: 0.8.4
       vite: 5.4.1(@types/node@20.14.15)(terser@5.31.6)
-      vite-node: 1.6.0(@types/node@20.14.15)(terser@5.31.6)
+      vite-node: 1.6.0(@types/node@20.14.15)(supports-color@8.1.1)(terser@5.31.6)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.14.15
