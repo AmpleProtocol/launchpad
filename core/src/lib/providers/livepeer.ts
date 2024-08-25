@@ -3,7 +3,6 @@ import { Livepeer, SDKOptions } from "livepeer";
 import { Type } from "livepeer/models/components";
 import { GetViewershipMetricsRequest } from "livepeer/models/operations";
 
-
 /**
 	* Livepeer Provider to use the Ample Launchpad with Livepeer's infrastructure
 */
@@ -12,13 +11,6 @@ export class LivepeerProvider implements IProvider {
 
 	constructor(sdkOptions: SDKOptions) {
 		this.livepeer = new Livepeer(sdkOptions)
-	}
-
-	getStreamingUrl(referenceId: string, jwt?: string | undefined): string {
-		if (jwt) {
-			return `https://playback.livepeer.studio/asset/hls/${referenceId}/index.m3u8?jwt=${jwt}`
-		}
-		return `https://playback.livepeer.studio/asset/hls/${referenceId}/index.m3u8`
 	}
 
 	async createAsset(
@@ -67,4 +59,31 @@ export class LivepeerProvider implements IProvider {
 
 		return viewCount
 	}
+
+	// async createJwt(
+	// 	jwtPrivateKey: string,
+	// 	jwtPublicKey: string,
+	// 	referenceId: string,
+	// 	issuer: string,
+	// 	metadata: any
+	// ) {
+	// 	if (typeof window !== 'undefined') {
+	// 		throw new Error('createJwt() is not available in the browser')
+	// 	}
+	// 	const jwt = await signAccessJwt({
+	// 		privateKey: jwtPrivateKey,
+	// 		publicKey: jwtPublicKey,
+	// 		issuer,
+	// 		playbackId: referenceId,
+	// 		// expiration: 86400 // default value for now
+	// 		custom: metadata
+	// 	})
+	//
+	// 	// todo: add support for other streaming protocols other than hls
+	// 	return {
+	// 		jwt,
+	// 		streamingUrl: `https://playback.livepeer.studio/asset/hls/${referenceId}/index.m3u8?jwt=${jwt}`
+	// 	}
+	// }
+
 }

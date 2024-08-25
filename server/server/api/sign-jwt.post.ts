@@ -65,7 +65,7 @@ export default eventHandler(async event => {
 	}
 
 	// 4. Sign a new JWT and send it to the user
-	const jwt = await createJwt(
+	const { jwt, streamingUrl } = await createJwt(
 		privateKey,
 		publicKey,
 		playbackId,
@@ -75,5 +75,6 @@ export default eventHandler(async event => {
 			contentId
 		}
 	)
-	return { success: true, data: jwt }
+
+	return { success: true, data: { jwt, streamingUrl } }
 })

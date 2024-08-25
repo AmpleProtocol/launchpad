@@ -48,10 +48,10 @@ export class Launchpad {
 		* publicKey.
 		* See https://github.com/near/NEPs/blob/master/neps/nep-0413.md for reference
 	*/
-	async getJwt({ contentId, payload }: IGetJwtParams): Promise<string> {
+	async getJwt({ contentId, payload }: IGetJwtParams) {
 		const accounts = await this.wallet.getAccounts()
 
-		const res = await this.axios.post<IServerResponse<string>>('/api/sign-jwt', {
+		const res = await this.axios.post<IServerResponse<{ jwt: string, streamingUrl: string }>>('/api/sign-jwt', {
 			contentId,
 			accountId: accounts[0].accountId,
 			payload

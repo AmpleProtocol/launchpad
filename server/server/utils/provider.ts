@@ -5,17 +5,17 @@ export const livepeer = new LivepeerProvider({
 	apiKey: process.env.NITRO_LIVEPEER_API_KEY,
 })
 
-export function createJwt(
+export async function createJwt(
 	jwtPrivateKey: string,
 	jwtPublicKey: string,
 	referenceId: string,
 	issuer: string,
 	metadata: any
-): Promise<string> {
+) {
 	if (typeof window !== 'undefined') {
 		throw new Error('createJwt() is not available in the browser')
 	}
-	return signAccessJwt({
+	const jwt = await signAccessJwt({
 		privateKey: jwtPrivateKey,
 		publicKey: jwtPublicKey,
 		issuer,
@@ -23,4 +23,10 @@ export function createJwt(
 		// expiration: 86400 // default value for now
 		custom: metadata
 	})
+
+	return {
+		jwt,
+		streamingUrl: `https://playback.livepeer.studio/asset/hls/${referenceId}/index.m3u8?jwt=${jwt}`
+	}
+
 }
