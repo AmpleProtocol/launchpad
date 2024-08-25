@@ -2,13 +2,26 @@ import { useEffect, useMemo, useState } from "react"
 import { useLaunchpad } from "../context"
 import { IContent, IPayload } from "@ample-launchpad/client"
 import type { SignedMessage, SignMessageParams } from "@near-wallet-selector/core";
-
+import { VideoPlayer, VideoPlayerProps } from "@videojs-player/react";
 import 'video.js/dist/video-js.css'
-import { VideoPlayer } from "@videojs-player/react";
+
+const constructPayload = (
+	{ publicKey, signature }: SignedMessage,
+	{ message, recipient, nonce }: SignMessageParams
+): IPayload => {
+	return {
+		publicKey,
+		signature,
+		message,
+		nonce: nonce.toString('base64'),
+		recipient,
+		callbackUrl: location.href
+	}
+}
 
 interface IPlayerProps {
 	contentId: string,
-
+	videoJSProps: Omit<VideoPlayerProps, 'src'>
 }
 /**
 	* 1. Check for an existing jwt in localStorage
@@ -16,7 +29,7 @@ interface IPlayerProps {
 	* 3. sign a new message using wallet
 	* 4. Get a new JWT using getJwt() and store it in LS
 */
-export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
+export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 	const { getJwt, getContent, wallet, provider } = useLaunchpad()
 	const [jwt, setJwt] = useState<string | null>(null)
 	const [content, setContent] = useState<IContent | null>(null)
@@ -29,13 +42,15 @@ export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
 		// check for jwt in local storage
 		// if not there, check for the url for signatures to get access 
 		// if none of the above, sign a new message
-		if (!jwt) {
-			// whenever any of these functions updates the state (jwt); the useEffect 
-			// execution will terminate and rerun it
-			checkForJwt()
-			checkForSignatureInUrl()
-			signMessage()
-		}
+		if (jwt) return
+
+		const jwtFound = checkForJwt()
+		if (jwtFound) return
+
+		const sigFound = checkForSignatureInUrl()
+		if (sigFound) return
+
+		signMessage()
 	}, [jwt])
 
 	// send payload (signature) to get an access jwt
@@ -46,21 +61,22 @@ export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
 		setJwt(_jwt)
 	}
 
-	const checkForJwt = () => {
+	const checkForJwt = (): boolean => {
 		// Check in localStorage for jwt
 		const _jwt = localStorage.getItem(`jwt-access-${contentId}`)
-		if (_jwt) {
-			setJwt(_jwt)
-		}
+		if (!_jwt) return false
+		// update state
+		setJwt(_jwt)
+		return true
 	}
 
-	const checkForSignatureInUrl = () => {
+	const checkForSignatureInUrl = (): boolean => {
 		const searchParams = new URLSearchParams(window.location.search);
 		const accountId = searchParams.get("accountId") as string;
 		const publicKey = searchParams.get("publicKey") as string;
 		const signature = searchParams.get("signature") as string;
 
-		if (!accountId || !publicKey || !signature) return
+		if (!accountId || !publicKey || !signature) return false
 
 		const message: SignMessageParams = JSON.parse(
 			localStorage.getItem(`message-to-sign-${contentId}`)!
@@ -75,6 +91,7 @@ export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
 		window.history.replaceState({}, document.title, url);
 
 		getAccess(payload)
+		return true
 	}
 
 	// sign an arbitrary message to prove wallet ownership
@@ -118,23 +135,9 @@ export const Player: React.FC<IPlayerProps> = ({ contentId }) => {
 		return provider.getStreamingUrl(content.playbackId, jwt)
 	}, [jwt, content])
 
-	const constructPayload = (
-		{ publicKey, signature }: SignedMessage,
-		{ message, recipient, nonce }: SignMessageParams
-	): IPayload => {
-		return {
-			publicKey,
-			signature,
-			message,
-			nonce: nonce.toString('base64'),
-			recipient,
-			callbackUrl: location.href
-		}
-	}
-
 	if (!hlsUrl) return null
 
 	// return hls video player
-	return <VideoPlayer src={hlsUrl} controls loop={false} />
+	return <VideoPlayer src={hlsUrl} {...videoJSProps} />
 }
 

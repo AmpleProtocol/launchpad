@@ -38,9 +38,6 @@ importers:
 
   core:
     dependencies:
-      '@livepeer/core':
-        specifier: ^3.2.5
-        version: 3.2.5(@types/react@18.3.3)(react@18.3.1)
       '@near-wallet-selector/core':
         specifier: ^8.9.5
         version: 8.9.12
@@ -115,6 +112,9 @@ importers:
       '@ample-launchpad/core':
         specifier: workspace:*
         version: link:../core
+      '@livepeer/core':
+        specifier: ^3.2.5
+        version: 3.2.5(@types/react@18.3.3)(react@18.3.1)
       '@near-wallet-selector/core':
         specifier: ^8.9.10
         version: 8.9.12
@@ -158,6 +158,7 @@ importers:
       react-hook-form:
         specifier: ^7.52.2
         version: 7.53.0(react@18.3.1)
+
       theme-ui:
         specifier: ^0.16.2
         version: 0.16.2(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
@@ -3409,6 +3410,7 @@ packages:
 
   react-hook-form@7.53.0:
     resolution: {integrity: sha512-M1n3HhqCww6S2hxLxciEXy2oISPnAzxY7gvwVPrtlczTM/1dDadXgUxDpHMrMTblDOcm/AXtXxHwZ3jpg1mqKQ==}
+
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -7825,6 +7827,7 @@ snapshots:
       scheduler: 0.23.2
 
   react-hook-form@7.53.0(react@18.3.1):
+
     dependencies:
       react: 18.3.1
 
@@ -8504,6 +8507,7 @@ snapshots:
       global: 4.4.0
 
   vite-node@1.6.0(@types/node@20.14.15)(supports-color@8.1.1)(terser@5.31.6):
+
     dependencies:
       cac: 6.7.14
       debug: 4.3.6(supports-color@8.1.1)

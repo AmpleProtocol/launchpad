@@ -1,5 +1,5 @@
 import { verifySignature } from "@near-wallet-selector/core"
-import { livepeer } from "~/utils/provider"
+import { createJwt } from "~/utils/provider"
 
 const privateKey = process.env.NITRO_PRIVATE_KEY
 const publicKey = process.env.NITRO_PUBLIC_KEY
@@ -65,7 +65,7 @@ export default eventHandler(async event => {
 	}
 
 	// 4. Sign a new JWT and send it to the user
-	const jwt = await livepeer.createJwt(
+	const jwt = await createJwt(
 		privateKey,
 		publicKey,
 		playbackId,

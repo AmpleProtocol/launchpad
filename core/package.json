@@ -34,7 +34,6 @@
 		"vitest": "^1.5.3"
 	},
 	"dependencies": {
-		"@livepeer/core": "^3.2.5",
 		"@near-wallet-selector/core": "^8.9.5",
 		"livepeer": "^3.3.0",
 		"near-api-js": "^4.0.3"

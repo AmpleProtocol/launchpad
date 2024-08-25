@@ -1,7 +1,6 @@
 import { IWalletSelectorProps, IServerSideProps, IQueryResponseKindCustom, ISigner } from "../types";
-import { Account, KeyPair, connect } from "near-api-js";
+import { Account, KeyPair, keyStores, connect } from "near-api-js";
 import { JsonRpcProvider } from "near-api-js/lib/providers";
-import { InMemoryKeyStore } from "near-api-js/lib/key_stores";
 
 /**
 	* Ideal for server side usage
@@ -13,7 +12,7 @@ export const getSignerFromPrivateKey = async ({ network, accountId, privateKey }
 
 	// Create signer using keypair and accounts from near-api-js for server side usage
 	const keyPair = KeyPair.fromString(privateKey)
-	const keyStore = new InMemoryKeyStore()
+	const keyStore = new keyStores.InMemoryKeyStore()
 	await keyStore.setKey(network, accountId, keyPair)
 
 	const nearConnection = await connect({

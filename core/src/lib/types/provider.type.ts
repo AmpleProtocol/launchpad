@@ -38,20 +38,4 @@ export interface IProvider {
 		from?: Date,
 		to?: Date
 	): Promise<number>,
-
-	/**
-		* Creates a jwt for tokengated access 
-		* @param jwtPrivateKey - The private key used to sign the token
-		* @param jwtPublicKey - Public key corresponding to the private key
-		* @param referenceId - The reference id of the asset you are restricting access to
-		* @param issuer - The issuer of the token
-		* @param metadata - Custom data added to the token
-	*/
-	createJwt(
-		jwtPrivateKey: string,
-		jwtPublicKey: string,
-		referenceId: string,
-		issuer: string,
-		metadata: any
-	): Promise<string>
 }

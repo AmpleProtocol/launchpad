@@ -1,4 +1,4 @@
-import { IProvider, Series, Treasury } from '@ample-launchpad/core'
+import { Series, Treasury } from '@ample-launchpad/core'
 import axios, { Axios } from 'axios'
 import { IContent, ICreateContentParams, IGetJwtParams } from '../types/launchpad.types'
 import { Wallet } from '@near-wallet-selector/core'
@@ -23,7 +23,6 @@ export class Launchpad {
 		serverUrl: string,
 		public wallet: Wallet,
 		public contracts: IContracts,
-		public provider: IProvider,
 	) {
 		this.axios = axios.create({
 			baseURL: serverUrl,
