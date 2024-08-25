@@ -61,7 +61,6 @@ export default function Home() {
 		// setup launchpad
 		const launchpad = await setupLaunchpad({
 			network: 'testnet',
-			provider,
 			wallet,
 			serverUrl: 'https://localhost:5000',
 			treasuryAddress: 'treasury.test.testnet',

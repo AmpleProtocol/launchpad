@@ -1,5 +1,4 @@
 import { ICreateAssetResult, IProvider } from "../types";
-import { signAccessJwt } from '@livepeer/core/crypto'
 import { Livepeer, SDKOptions } from "livepeer";
 import { Type } from "livepeer/models/components";
 import { GetViewershipMetricsRequest } from "livepeer/models/operations";
@@ -68,25 +67,4 @@ export class LivepeerProvider implements IProvider {
 
 		return viewCount
 	}
-
-	createJwt(
-		jwtPrivateKey: string,
-		jwtPublicKey: string,
-		referenceId: string,
-		issuer: string,
-		metadata: any
-	): Promise<string> {
-		if (typeof window !== 'undefined') {
-			throw new Error('createJwt() is not available in the browser')
-		}
-		return signAccessJwt({
-			privateKey: jwtPrivateKey,
-			publicKey: jwtPublicKey,
-			issuer,
-			playbackId: referenceId,
-			// expiration: 86400 // default value for now
-			custom: metadata
-		})
-	}
-
 }
