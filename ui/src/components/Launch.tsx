@@ -1,4 +1,4 @@
-import { Box, Grid, Input, Label, Spinner } from "theme-ui"
+import { Box, Container, Flex, Grid, Input, Label, Spinner } from "theme-ui"
 import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./lib/ErrorMessage";
@@ -75,10 +75,10 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress })
 		upload.start()
 	}
 
-	return <Grid>
-		{/* fields */}
-		<Box as="form" onSubmit={handleSubmit(onSubmit)}>
-			<Box>
+	return <Box sx={{ padding: '20px', borderRadius: '5px', margin: '20px', boxShadow: '2px 5px 10px lightgrey' }}>
+		<h1>Launch</h1>
+		<Grid as="form" onSubmit={handleSubmit(onSubmit)} columns={['1fr 1fr']}>
+			<Container>
 				<h2>Content</h2>
 				<Label>
 					Title
@@ -124,19 +124,23 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress })
 					<Input {...register('holdersRoyalty', { required: 'This field is required' })} />
 				</Label>
 				<ErrorMessage fieldError={errors.holdersRoyalty} />
-			</Box>
+			</Container>
 
 			{/* media field */}
-			<Box>
-				<Label>
-					File
-					<Input type="file" {...register('file', { required: 'File required to create the content' })} />
-				</Label>
-				<ErrorMessage fieldError={errors.file} />
+			<Container>
+				<Flex sx={{ flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
+					<Box>
+						<h2>File</h2>
+						<Input type="file" {...register('file', { required: 'File required to create the content' })} />
+						<ErrorMessage fieldError={errors.file} />
+					</Box>
 
-				{loading && <Spinner />}
-				<Input type="submit" disabled={loading} />
-			</Box>
-		</Box>
-	</Grid>
+					<Box>
+						{loading && <Spinner />}
+						<Input type="submit" disabled={loading} />
+					</Box>
+				</Flex>
+			</Container>
+		</Grid>
+	</Box>
 }
