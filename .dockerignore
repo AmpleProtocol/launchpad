@@ -3,6 +3,7 @@ node_modules
 .dockerignore
 
 example
+contracts
 
 client/dist
 core/dist
