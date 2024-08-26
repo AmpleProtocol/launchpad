@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLaunchpad } from "../context"
-import { IContent, IPayload } from "@ample-launchpad/client"
+import { IPayload } from "@ample-launchpad/client"
 import type { SignedMessage, SignMessageParams } from "@near-wallet-selector/core";
 import { VideoPlayer, VideoPlayerProps } from "@videojs-player/react";
-import 'video.js/dist/video-js.css'
+// import 'video.js/dist/video-js.css'
 
 const constructPayload = (
 	{ publicKey, signature }: SignedMessage,
@@ -30,43 +30,43 @@ interface IPlayerProps {
 	* 4. Get a new JWT using getJwt() and store it in LS
 */
 export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
-	const { getJwt, getContent, wallet, provider } = useLaunchpad()
-	const [jwt, setJwt] = useState<string | null>(null)
-	const [content, setContent] = useState<IContent | null>(null)
+	const { getJwt, wallet } = useLaunchpad()
+	const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
+	// const [content, setContent] = useState<IContent | null>(null)
 
-	useEffect(() => {
-		fetchContent()
-	}, [])
+	// useEffect(() => {
+	// 	fetchContent()
+	// }, [])
 
 	useEffect(() => {
 		// check for jwt in local storage
 		// if not there, check for the url for signatures to get access 
 		// if none of the above, sign a new message
-		if (jwt) return
+		if (streamingUrl) return
 
-		const jwtFound = checkForJwt()
-		if (jwtFound) return
+		const streamingUrlFound = checkForStreamingUrl()
+		if (streamingUrlFound) return
 
 		const sigFound = checkForSignatureInUrl()
 		if (sigFound) return
 
 		signMessage()
-	}, [jwt])
+	}, [streamingUrl])
 
 	// send payload (signature) to get an access jwt
 	const getAccess = async (payload: IPayload) => {
-		const _jwt = await getJwt({ contentId, payload })
+		const { streamingUrl: _url } = await getJwt({ contentId, payload })
 
-		localStorage.setItem(`jwt-access-${contentId}`, _jwt)
-		setJwt(_jwt)
+		localStorage.setItem(`streaming-url-${contentId}`, _url)
+		setStreamingUrl(_url)
 	}
 
-	const checkForJwt = (): boolean => {
+	const checkForStreamingUrl = (): boolean => {
 		// Check in localStorage for jwt
-		const _jwt = localStorage.getItem(`jwt-access-${contentId}`)
-		if (!_jwt) return false
+		const _url = localStorage.getItem(`streaming-url-${contentId}`)
+		if (!_url) return false
 		// update state
-		setJwt(_jwt)
+		setStreamingUrl(_url)
 		return true
 	}
 
@@ -123,21 +123,16 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 		}
 	};
 
-	const fetchContent = async () => {
-		const res = await getContent(contentId)
-		if (!res.data.data) throw new Error('Content not found')
-		if (!res.data.success) throw new Error(res.data.message!)
-		setContent(res.data.data)
-	}
+	// const fetchContent = async () => {
+	// 	const res = await getContent(contentId)
+	// 	if (!res.data.data) throw new Error('Content not found')
+	// 	if (!res.data.success) throw new Error(res.data.message!)
+	// 	setContent(res.data.data)
+	// }
 
-	const hlsUrl = useMemo<string | null>(() => {
-		if (!jwt || !content) return null
-		return provider.getStreamingUrl(content.playbackId, jwt)
-	}, [jwt, content])
-
-	if (!hlsUrl) return null
+	if (!streamingUrl) return null
 
 	// return hls video player
-	return <VideoPlayer src={hlsUrl} {...videoJSProps} />
+	return <VideoPlayer src={streamingUrl} {...videoJSProps} />
 }
 

@@ -1,7 +1,7 @@
 import { Box, Grid, Input, Label, Spinner } from "theme-ui"
 import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { ErrorMessage } from "./common/ErrorMessage";
+import { ErrorMessage } from "./lib/ErrorMessage";
 import { ICreateContentParams } from "@ample-launchpad/client";
 import { useState } from "react";
 import { Upload } from "tus-js-client";

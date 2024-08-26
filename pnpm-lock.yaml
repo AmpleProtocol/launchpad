@@ -146,19 +146,15 @@ importers:
       '@near-wallet-selector/core':
         specifier: ^8.9.12
         version: 8.9.12
-      '@types/react':
-        specifier: ^18.3.3
-        version: 18.3.3
       '@videojs-player/react':
         specifier: ^1.0.0
         version: 1.0.0(@types/video.js@7.3.58)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(video.js@8.17.3)
       react:
-        specifier: ^18.3.1
+        specifier: ^18
         version: 18.3.1
       react-hook-form:
         specifier: ^7.52.2
         version: 7.53.0(react@18.3.1)
-
       theme-ui:
         specifier: ^0.16.2
         version: 0.16.2(@emotion/react@11.13.0(@types/react@18.3.3)(react@18.3.1))(react@18.3.1)
@@ -172,6 +168,9 @@ importers:
       '@types/node':
         specifier: ^20.11.30
         version: 20.14.15
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.3
       tsup:
         specifier: ^8.0.2
         version: 8.2.4(jiti@1.21.6)(postcss@8.4.41)(supports-color@8.1.1)(typescript@5.5.4)
@@ -3410,7 +3409,6 @@ packages:
 
   react-hook-form@7.53.0:
     resolution: {integrity: sha512-M1n3HhqCww6S2hxLxciEXy2oISPnAzxY7gvwVPrtlczTM/1dDadXgUxDpHMrMTblDOcm/AXtXxHwZ3jpg1mqKQ==}
-
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -7827,7 +7825,6 @@ snapshots:
       scheduler: 0.23.2
 
   react-hook-form@7.53.0(react@18.3.1):
-
     dependencies:
       react: 18.3.1
 
@@ -8507,7 +8504,6 @@ snapshots:
       global: 4.4.0
 
   vite-node@1.6.0(@types/node@20.14.15)(supports-color@8.1.1)(terser@5.31.6):
-
     dependencies:
       cac: 6.7.14
       debug: 4.3.6(supports-color@8.1.1)
