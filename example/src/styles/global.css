@@ -1,0 +1,44 @@
+:root {
+	--primary: #8e55fb;
+}
+
+html {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+nav {
+	display: flex;
+	justify-content: center;
+	padding: 15px 0;
+	margin: 15px;
+	border-radius: 10px;
+	border: 1px solid black;
+	box-shadow: 2px 2px 5px lightgrey;
+}
+
+button.nav-link {
+	font-size: 20px;
+	background-color: transparent;
+	color: grey;
+	border: 0;
+	cursor: pointer;
+	margin: 0 20px;
+	font-weight: 600;
+}
+
+button.nav-link.logout {
+	position: absolute;
+	right: 30px;
+}
+
+button.nav-link.logout:hover {
+	color: red;
+}
+
+button.nav-link:hover {
+	color: black;
+}
+
+button.nav-link.active {
+	color: var(--primary);
+}

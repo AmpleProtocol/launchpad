@@ -1,14 +1,15 @@
-import { AmpleLaunchpadProvider, Launch } from '@ample-launchpad/ui'
-import { Launchpad, setupLaunchpad, } from '@ample-launchpad/client';
-import { LivepeerProvider } from '@ample-launchpad/core';
 import { useEffect, useState } from 'react';
+import { AmpleLaunchpadProvider } from '@ample-launchpad/ui'
+import { Launchpad, setupLaunchpad, } from '@ample-launchpad/client';
 import { setupWalletSelector, WalletSelector } from '@near-wallet-selector/core';
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
 import { setupModal, WalletSelectorModal } from '@near-wallet-selector/modal-ui';
+import { Content } from '@/components/Content';
+import SignIn from '@/components/SignIn';
 
 export default function Home() {
-	const [launchpad, setLaunchpad] = useState<Launchpad | null>(null)
 	const [selector, setSelector] = useState<WalletSelector | null>(null)
+	const [launchpad, setLaunchpad] = useState<Launchpad | null>(null)
 	const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
 	const [modal, setModal] = useState<WalletSelectorModal | null>(null)
 
@@ -32,9 +33,12 @@ export default function Home() {
 			]
 		})
 
+		const account = selector.store.getState().accounts[0]
+		if (account) setIsSignedIn(true)
+
 		const modal = setupModal(selector, {
 			// workaround this?
-			contractId: 'treasury.test.testnet'
+			contractId: 'treasury4.calabaza.testnet'
 		})
 
 		selector.on('signedIn', (_) => {
@@ -52,9 +56,6 @@ export default function Home() {
 	const initLaunchpad = async () => {
 		if (!selector) return
 
-		// get a provider
-		const provider = new LivepeerProvider({ apiKey: 'someapikey' })
-
 		// assert user is logged in
 		const wallet = await selector.wallet()
 
@@ -63,8 +64,8 @@ export default function Home() {
 			network: 'testnet',
 			wallet,
 			serverUrl: 'https://localhost:5000',
-			treasuryAddress: 'treasury.test.testnet',
-			seriesAddress: 'series.test.testnet',
+			treasuryAddress: 'treasury4.calabaza.testnet',
+			seriesAddress: 'nftseries2.calabaza.testnet',
 		})
 
 		setLaunchpad(launchpad)
@@ -74,10 +75,9 @@ export default function Home() {
 		<>
 			{launchpad
 				? <AmpleLaunchpadProvider launchpad={launchpad}>
-					<h1>Hello world</h1>
-					<Launch />
+					<Content />
 				</AmpleLaunchpadProvider>
-				: <button onClick={() => modal?.show()}>Connect Wallet</button>
+				: <SignIn modal={modal!} />
 			}
 		</>
 	);

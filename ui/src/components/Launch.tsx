@@ -1,9 +1,9 @@
-import { Box, Container, Flex, Grid, Input, Label, Spinner } from "theme-ui"
+import { Box, BoxProps, Container, Flex, Grid, Image, Input, Label, Spinner } from "theme-ui"
 import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./lib/ErrorMessage";
 import { ICreateContentParams } from "@ample-launchpad/client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Upload } from "tus-js-client";
 
 interface IFormData extends Omit<ICreateContentParams, 'treasuryRoyalty'> {
@@ -17,16 +17,32 @@ interface ICreateContentResponse {
 	collectionId: string,
 }
 
-interface ILaunchProps {
+interface ILaunchProps extends BoxProps {
 	onContentCreated?: (newContent: ICreateContentResponse) => any,
-	onProgress?: (progress: number) => any
+	onUploadProgress?: (progress: number) => any
 }
 
-export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress }) => {
-	const { createContent } = useLaunchpad()
-	const { handleSubmit, register, formState: { errors } } = useForm<IFormData>()
+export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgress, ...props }) => {
+	const { createContent, wallet } = useLaunchpad()
+	const { handleSubmit, register, setValue, watch, formState: { errors } } = useForm<IFormData>({
+		defaultValues: {
+			totalSupply: 100000,
+			price: '10'
+		}
+	})
 	const [loading, setLoading] = useState<boolean>(false)
+	const mediaUrl = watch('mediaUrl')
 
+	useEffect(() => {
+		setOwner()
+	}, [])
+
+	const setOwner = async () => {
+		const accounts = await wallet.getAccounts()
+		if (!accounts[0]) return
+
+		setValue('owner', accounts[0].accountId)
+	}
 	/**
 		* Create the content and launch the collection
 	*/
@@ -44,11 +60,11 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress })
 				holders: data.holdersRoyalty
 			}
 		})
-		if (!res.data.success) throw new Error(res.data.message!)
+		if (!res.data.success || !res.data.data) throw new Error(res.data.message!)
 
 		// create a new Upload 
 		const upload = new Upload(file, {
-			endpoint: res.data.data?.tusEndpoint,
+			endpoint: res.data.data.tusEndpoint,
 			retryDelays: [0, 3000, 5000, 10000, 20000],
 			metadata: {
 				filename: file.name,
@@ -60,7 +76,7 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress })
 			},
 			onProgress: (bytesUploaded, bytesTotal) => {
 				const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
-				onProgress && onProgress(Number(percentage))
+				onUploadProgress && onUploadProgress(Number(percentage))
 			},
 			onSuccess: () => {
 				// notify user back about the created content
@@ -75,8 +91,16 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress })
 		upload.start()
 	}
 
-	return <Box sx={{ padding: '20px', borderRadius: '5px', margin: '20px', boxShadow: '2px 5px 10px lightgrey' }}>
-		<h1>Launch</h1>
+	const mediaSrc = useMemo<string | null>(() => {
+		try {
+			const _url = new URL(mediaUrl)
+			return _url.toString()
+		} catch (error) {
+			return null
+		}
+	}, [mediaUrl])
+
+	return <Box sx={{ borderRadius: '5px' }} {...props}>
 		<Grid as="form" onSubmit={handleSubmit(onSubmit)} columns={['1fr 1fr']}>
 			<Container>
 				<h2>Content</h2>
@@ -98,7 +122,7 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress })
 				</Label>
 				<ErrorMessage fieldError={errors.totalSupply} />
 				<Label>
-					Price
+					Price (in NEAR)
 					<Input type="number" {...register('price', { required: 'Price is required' })} />
 				</Label>
 				<ErrorMessage fieldError={errors.price} />
@@ -116,12 +140,12 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress })
 				<h2>Royalty</h2>
 				<Label>
 					Owner royalty
-					<Input {...register('ownerRoyalty', { required: 'This field is required' })} />
+					<Input type="number" {...register('ownerRoyalty', { required: 'This field is required' })} />
 				</Label>
 				<ErrorMessage fieldError={errors.ownerRoyalty} />
 				<Label>
 					Holders royalty
-					<Input {...register('holdersRoyalty', { required: 'This field is required' })} />
+					<Input type="number" {...register('holdersRoyalty', { required: 'This field is required' })} />
 				</Label>
 				<ErrorMessage fieldError={errors.holdersRoyalty} />
 			</Container>
@@ -135,9 +159,13 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onProgress })
 						<ErrorMessage fieldError={errors.file} />
 					</Box>
 
+					{mediaSrc && <Box sx={{ alignSelf: 'center' }}>
+						<Image variant="nftPreview" src={mediaSrc} alt="NFT media preview" />
+					</Box>}
+
 					<Box>
 						{loading && <Spinner />}
-						<Input type="submit" disabled={loading} />
+						<Input variant="launchButton" type="submit" disabled={loading} value='Launch' />
 					</Box>
 				</Flex>
 			</Container>

@@ -23,33 +23,22 @@ interface IPlayerProps {
 	contentId: string,
 	videoJSProps: Omit<VideoPlayerProps, 'src'>
 }
-/**
-	* 1. Check for an existing jwt in localStorage
-	* 2. Check for signatures in URL
-	* 3. sign a new message using wallet
-	* 4. Get a new JWT using getJwt() and store it in LS
-*/
 export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 	const { getJwt, wallet } = useLaunchpad()
 	const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
-	// const [content, setContent] = useState<IContent | null>(null)
-
-	// useEffect(() => {
-	// 	fetchContent()
-	// }, [])
 
 	useEffect(() => {
-		// check for jwt in local storage
-		// if not there, check for the url for signatures to get access 
-		// if none of the above, sign a new message
 		if (streamingUrl) return
 
+		// check for jwt in local storage
 		const streamingUrlFound = checkForStreamingUrl()
 		if (streamingUrlFound) return
 
+		// if not there, check the url for signatures to get access 
 		const sigFound = checkForSignatureInUrl()
 		if (sigFound) return
 
+		// if none of the above, sign a new message
 		signMessage()
 	}, [streamingUrl])
 
@@ -122,13 +111,6 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 			getAccess(payload)
 		}
 	};
-
-	// const fetchContent = async () => {
-	// 	const res = await getContent(contentId)
-	// 	if (!res.data.data) throw new Error('Content not found')
-	// 	if (!res.data.success) throw new Error(res.data.message!)
-	// 	setContent(res.data.data)
-	// }
 
 	if (!streamingUrl) return null
 
