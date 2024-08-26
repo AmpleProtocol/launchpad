@@ -27,6 +27,12 @@ export class Launchpad {
 		this.axios = axios.create({
 			baseURL: serverUrl,
 		})
+		// bound 'this' context for preventing context changing when deconstructing 
+		// methods
+		this.createContent = this.createContent.bind(this)
+		this.getJwt = this.getJwt.bind(this)
+		this.getContents = this.getContents.bind(this)
+		this.getContent = this.getContent.bind(this)
 	}
 
 	/**
@@ -66,7 +72,6 @@ export class Launchpad {
 		* Returns all of the contents stored in server db
 	*/
 	getContents() {
-		// todo: add query params
 		return this.axios.get<IServerResponse<IContent[]>>('/api/content')
 	}
 
