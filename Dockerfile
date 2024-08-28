@@ -12,6 +12,8 @@ RUN ls
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
 RUN ls
 
+ENV NODE_ENV='production'
+
 # Build everything
 RUN pnpm build
 
