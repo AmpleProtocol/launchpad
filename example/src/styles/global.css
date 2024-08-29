@@ -6,14 +6,19 @@ html {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
+body {
+	background-color: #f9f9f9;
+}
+
 nav {
 	display: flex;
 	justify-content: center;
 	padding: 15px 0;
-	margin: 15px;
-	border-radius: 10px;
-	border: 1px solid black;
-	box-shadow: 2px 2px 5px lightgrey;
+	margin: 15px auto;
+	border-radius: 15px;
+	background-color: #ffffff;
+	width: 50%;
+	box-shadow: 0 2px 5px #d6d6d6;
 }
 
 button.nav-link {
@@ -41,4 +46,12 @@ button.nav-link:hover {
 
 button.nav-link.active {
 	color: var(--primary);
+}
+
+div.card {
+	background-color: white;
+	margin: 20px;
+	padding: 20px;
+	border-radius: 15px;
+	box-shadow: 0 2px 5px #d6d6d6;
 }

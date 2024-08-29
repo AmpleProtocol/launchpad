@@ -29,7 +29,9 @@ export const Content = () => {
 			<button onClick={() => wallet.signOut()} className="nav-link logout">Log out</button>
 		</nav>
 		<main>
-			<TabComponent />
+			<div className="card">
+				<TabComponent />
+			</div>
 		</main>
 	</>
 }

@@ -6,6 +6,7 @@ import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
 import { setupModal, WalletSelectorModal } from '@near-wallet-selector/modal-ui';
 import { Content } from '@/components/Content';
 import SignIn from '@/components/SignIn';
+import { Networks } from '@ample-launchpad/core';
 
 export default function Home() {
 	const [selector, setSelector] = useState<WalletSelector | null>(null)
@@ -37,8 +38,7 @@ export default function Home() {
 		if (account) setIsSignedIn(true)
 
 		const modal = setupModal(selector, {
-			// workaround this?
-			contractId: 'treasury4.calabaza.testnet'
+			contractId: ''
 		})
 
 		selector.on('signedIn', (_) => {
@@ -61,11 +61,11 @@ export default function Home() {
 
 		// setup launchpad
 		const launchpad = await setupLaunchpad({
-			network: 'testnet',
 			wallet,
-			serverUrl: 'https://localhost:5000',
-			treasuryAddress: 'treasury4.calabaza.testnet',
-			seriesAddress: 'nftseries2.calabaza.testnet',
+			network: process.env.NEXT_PUBLIC_NEAR_NETWORK as Networks,
+			serverUrl: process.env.NEXT_PUBLIC_SERVER_URL as string,
+			treasuryAddress: process.env.NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS as string,
+			seriesAddress: process.env.NEXT_PUBLIC_SERIES_CONTRACT_ADDRESS as string,
 		})
 
 		setLaunchpad(launchpad)
