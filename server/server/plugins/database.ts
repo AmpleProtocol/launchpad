@@ -1,11 +1,13 @@
 export default defineNitroPlugin(async () => {
+
 	const db = useDatabase()
 	// assert tables are created 
 
-	// todo: remove this 
-	await db.sql`drop table analytics`
-	await db.sql`drop table contents`
-	console.log('[db]: dropped tables')
+	if (process.env.NODE_ENV != 'production') {
+		await db.sql`drop table analytics`
+		await db.sql`drop table contents`
+		console.log('[db]: dropped tables')
+	}
 
 	// contents table
 	await db.sql`CREATE TABLE IF NOT EXISTS contents (
@@ -26,7 +28,7 @@ export default defineNitroPlugin(async () => {
 	)`;
 
 	// await db.sql`INSERT INTO contents VALUES ('firstId', 'Some movie', 'someCollectionId', 'somePlaybackId', 'someAssetId')`
-	// [db]: added fake content with id = firstId
+	// console.log('[db]: added fake content with id = firstId')
 
 	console.log('[db]: tables ready')
 })
