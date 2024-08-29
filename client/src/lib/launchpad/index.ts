@@ -3,6 +3,7 @@ import axios, { Axios } from 'axios'
 import { IContent, ICreateContentParams, IGetJwtParams } from '../types/launchpad.types'
 import { Wallet } from '@near-wallet-selector/core'
 
+type Range = 'day' | 'week' | 'month' | 'year'
 export interface IContracts {
 	treasury: Treasury,
 	series: Series,
@@ -33,6 +34,7 @@ export class Launchpad {
 		this.getJwt = this.getJwt.bind(this)
 		this.getContents = this.getContents.bind(this)
 		this.getContent = this.getContent.bind(this)
+		this.getAnalytics = this.getAnalytics.bind(this)
 	}
 
 	/**
@@ -80,5 +82,13 @@ export class Launchpad {
 	*/
 	getContent(id: string) {
 		return this.axios.get<IServerResponse<IContent>>(`/api/content/${id}`)
+	}
+
+	getAnalytics(range: Range, contentId: string) {
+		return this.axios.get<IServerResponse<{
+			totalGenerated: number,
+			streamsCount: number,
+			analytics: { streams: number, timestamp: number }[]
+		}>>(`/api/analytics?contentId=${contentId}&range=${range}`)
 	}
 }

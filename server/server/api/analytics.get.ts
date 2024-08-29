@@ -57,14 +57,14 @@ export default eventHandler(async event => {
 	const analytics = analyticsQuery.rows as unknown as IAnalytic[]
 
 	const streamsCount = analytics.reduce((acc, { streams }) => acc + streams, 0)
-	const streams = analytics.map(({ streams, timestamp }) => ({ streams, timestamp }))
+	const streamsAnalytics = analytics.map(({ streams, timestamp }) => ({ streams, timestamp }))
 
 	return {
 		success: true,
 		data: {
 			totalGenerated,
 			streamsCount,
-			streams
+			analytics: streamsAnalytics
 		}
 	}
 })
