@@ -1,5 +1,5 @@
 import { utils } from "near-api-js";
-import { Contract } from "./contract";
+import { Contract, THIRTY_TGAS } from "./contract";
 import { ISigner, JsonSerie, JsonToken, Royalty, TokenMetadata, TreasuryRoyalty } from "../types";
 
 interface ICreateSeriesParams {
@@ -75,6 +75,6 @@ export class Series extends Contract {
 			treasury_royalty: treasuryRoyalty,
 			price,
 			owner,
-		})
+		}, THIRTY_TGAS, '393000000000000000000000')
 	}
 }

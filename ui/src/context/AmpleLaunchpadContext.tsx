@@ -9,8 +9,12 @@ const AmpleLaunchpadContext = createContext<Launchpad | null>(null)
 // PROVIDER
 export const AmpleLaunchpadProvider: React.FC<{
 	children: ReactNode,
-	launchpad: Launchpad
-}> = ({ children, launchpad }) => {
+	launchpad: Launchpad,
+	accentColor?: string,
+}> = ({ children, launchpad, accentColor }) => {
+
+	if (accentColor && theme.colors) theme.colors.primary = accentColor
+
 	return <ThemeUIProvider theme={theme}>
 		<AmpleLaunchpadContext.Provider value={launchpad}>
 			{children}

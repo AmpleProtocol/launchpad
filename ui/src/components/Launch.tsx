@@ -5,6 +5,7 @@ import { ErrorMessage } from "./lib/ErrorMessage";
 import { ICreateContentParams } from "@ample-launchpad/client";
 import { useEffect, useMemo, useState } from "react";
 import { Upload } from "tus-js-client";
+import { utils } from "near-api-js";
 
 interface IFormData extends Omit<ICreateContentParams, 'treasuryRoyalty'> {
 	file: FileList,
@@ -52,43 +53,57 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 
 		setLoading(true)
 
-		// create the content and collection
-		const res = await createContent({
-			...data,
-			treasuryRoyalty: {
-				owner: data.ownerRoyalty,
-				holders: data.holdersRoyalty
-			}
-		})
-		if (!res.data.success || !res.data.data) throw new Error(res.data.message!)
+		try {
+			const yoctoPrice = utils.format.parseNearAmount(data.price)
 
-		// create a new Upload 
-		const upload = new Upload(file, {
-			endpoint: res.data.data.tusEndpoint,
-			retryDelays: [0, 3000, 5000, 10000, 20000],
-			metadata: {
-				filename: file.name,
-				filetype: file.type,
-			},
-			onError: (error) => {
-				alert(`Upload failed\n${error}`)
-				console.error(error)
-			},
-			onProgress: (bytesUploaded, bytesTotal) => {
-				const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
-				onUploadProgress && onUploadProgress(Number(percentage))
-			},
-			onSuccess: () => {
-				// notify user back about the created content
-				setLoading(false)
-				onContentCreated && onContentCreated({
-					contentId: res.data.data!.contentId,
-					collectionId: res.data.data!.collectionId
-				})
-			},
-		})
+			if (!yoctoPrice) throw new Error('Invalid price')
 
-		upload.start()
+			// create the content and collection
+			const res = await createContent({
+				owner: data.owner,
+				price: yoctoPrice,
+				title: data.title,
+				description: data.description,
+				mediaUrl: data.mediaUrl,
+				totalSupply: Number(data.totalSupply),
+				treasuryRoyalty: {
+					owner: Number(data.ownerRoyalty),
+					holders: Number(data.holdersRoyalty)
+				}
+			})
+			if (!res.data.success || !res.data.data) throw new Error(res.data.message!)
+
+			// create a new Upload 
+			const upload = new Upload(file, {
+				endpoint: res.data.data.tusEndpoint,
+				retryDelays: [0, 3000, 5000, 10000, 20000],
+				metadata: {
+					filename: file.name,
+					filetype: file.type,
+				},
+				onError: (error) => {
+					alert(`Upload failed\n${error}`)
+					console.error(error)
+				},
+				onProgress: (bytesUploaded, bytesTotal) => {
+					const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
+					onUploadProgress && onUploadProgress(Number(percentage))
+				},
+				onSuccess: () => {
+					// notify user back about the created content
+					setLoading(false)
+					onContentCreated && onContentCreated({
+						contentId: res.data.data!.contentId,
+						collectionId: res.data.data!.collectionId
+					})
+				},
+			})
+
+			upload.start()
+		} catch (error) {
+			setLoading(false)
+			throw error
+		}
 	}
 
 	const mediaSrc = useMemo<string | null>(() => {
@@ -159,13 +174,31 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 						<ErrorMessage fieldError={errors.file} />
 					</Box>
 
-					{mediaSrc && <Box sx={{ alignSelf: 'center' }}>
-						<Image variant="nftPreview" src={mediaSrc} alt="NFT media preview" />
-					</Box>}
+					{
+						mediaSrc
+							? <Box sx={{ alignSelf: 'center' }}>
+								<Image variant="nftPreview" src={mediaSrc} alt="NFT media preview" />
+							</Box>
+							: <Flex sx={{
+								backgroundColor: '#f1f1f1',
+								aspectRatio: '0.8',
+								marginX: 'auto',
+								width: '50%',
+								justifyContent: 'center',
+								alignItems: 'center',
+								color: '#b5b5b5',
+								borderRadius: '15px'
+							}}
+							>
+								Preview
+							</Flex>
+					}
 
 					<Box>
-						{loading && <Spinner />}
-						<Input variant="launchButton" type="submit" disabled={loading} value='Launch' />
+						{loading && <Box><Spinner /></Box>}
+						<Flex sx={{ justifyContent: 'end' }}>
+							<Input variant="launchButton" type="submit" disabled={loading} value='Launch' />
+						</Flex>
 					</Box>
 				</Flex>
 			</Container>

@@ -74,7 +74,7 @@ export default function Home() {
 	return (
 		<>
 			{launchpad
-				? <AmpleLaunchpadProvider launchpad={launchpad}>
+				? <AmpleLaunchpadProvider launchpad={launchpad} accentColor='#8e55fb'>
 					<Content />
 				</AmpleLaunchpadProvider>
 				: <SignIn modal={modal!} />

@@ -1,9 +1,19 @@
 import { Theme } from "theme-ui";
 
+const buttonProps = {
+	backgroundColor: 'primary',
+	color: 'white',
+	border: '1 px solid primary',
+	cursor: 'pointer',
+	borderRadius: '10px',
+	":hover": {
+		opacity: 0.8
+	}
+}
+
 export const theme: Theme = {
 	colors: {
 		primary: '#8e55fb',
-		primaryFocus: '#a379f4'
 	},
 	fonts: {
 		body: 'Arial, sans-serif',
@@ -15,16 +25,19 @@ export const theme: Theme = {
 			display: 'block'
 		},
 		input: {
-			marginBottom: '10px'
+			marginBottom: '10px',
+			border: '1px solid lightgray',
+			borderRadius: '10px',
 		},
-		launchButton: {
-			backgroundColor: 'primary',
-			color: 'white',
-			border: '1 px solid primary',
-			cursor: 'pointer',
-			":hover": {
-				backgroundColor: 'primaryFocus'
-			}
+		launchButton: buttonProps,
+	},
+	buttons: {
+		primary: buttonProps,
+		transparent: {
+			...buttonProps,
+			backgroundColor: 'transparent',
+			fontWeight: 700,
+			color: 'primary'
 		}
 	},
 	layout: {

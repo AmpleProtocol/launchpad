@@ -90,9 +90,9 @@ impl Contract {
             treasury_contract_address,
             NFTContractMetadata {
                 spec: "nft-1.0.0".to_string(),
-                name: "AMPLE NFT Contract".to_string(),
+                name: "Ample Launchpad NFT".to_string(),
                 symbol: "AMPLNFT".to_string(),
-                icon: Some("https://nftstorage.link/ipfs/bafkreie6gutz6lyyy6at7ux42s63lbjhtxjwlz3tfv3kjrylfpxecfuqom".to_string()),
+                icon: Some("https://nftstorage.link/ipfs/bafkreie5gutz6lyyy6at7ux42s63lbjhtxjwlz3tfv3kjrylfpxecfuqom".to_string()),
                 base_uri: None,
                 reference: Some("https://docsend.com/view/73hkgyxb6q8rzwyi".to_string()),
                 reference_hash: None,

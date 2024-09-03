@@ -1,8 +1,8 @@
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 import { ISigner } from '../types';
 
-const THIRTY_TGAS = '30000000000000';
-const NO_DEPOSIT = '0';
+export const THIRTY_TGAS = '30000000000000';
+export const NO_DEPOSIT = '0';
 
 /** Base contract class, inteded to be inherited and extended */
 export class Contract {

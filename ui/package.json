@@ -34,10 +34,12 @@
 	"dependencies": {
 		"@emotion/react": "^11.13.0",
 		"@videojs-player/react": "^1.0.0",
-		"video.js": "^8.17.3",
+		"near-api-js": "^4.0.3",
 		"react-hook-form": "^7.52.2",
+		"recharts": "^2.12.7",
 		"theme-ui": "^0.16.2",
-		"tus-js-client": "^4.1.0"
+		"tus-js-client": "^4.1.0",
+		"video.js": "^8.17.3"
 	},
 	"peerDependencies": {
 		"@ample-launchpad/client": "workspace:*",

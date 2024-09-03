@@ -19,5 +19,5 @@ account_exists || create_account
  
 # contract deployment
 echo "Deploying contract..."
-near deploy $CONTRACT_NAME ./target/wasm32-unknown-unknown/release/series.wasm --networkId $NEAR_NETWORK
+near deploy $CONTRACT_NAME ./target/wasm32-unknown-unknown/release/series.optimized.wasm --networkId $NEAR_NETWORK
 

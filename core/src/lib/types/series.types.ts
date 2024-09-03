@@ -2,7 +2,7 @@ export interface TokenMetadata {
 	title: string,
 	description: string,
 	media: string,
-	copies?: string,
+	copies?: number,
 }
 
 export interface JsonToken {
