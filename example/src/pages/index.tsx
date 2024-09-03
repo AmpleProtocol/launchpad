@@ -7,6 +7,7 @@ import { setupModal, WalletSelectorModal } from '@near-wallet-selector/modal-ui'
 import { Content } from '@/components/Content';
 import SignIn from '@/components/SignIn';
 import { Networks } from '@ample-launchpad/core';
+import ModalContextProvider from '@/context/ModalContext';
 
 export default function Home() {
 	const [selector, setSelector] = useState<WalletSelector | null>(null)
@@ -75,7 +76,9 @@ export default function Home() {
 		<>
 			{launchpad
 				? <AmpleLaunchpadProvider launchpad={launchpad} accentColor='#8e55fb'>
-					<Content />
+					<ModalContextProvider>
+						<Content />
+					</ModalContextProvider>
 				</AmpleLaunchpadProvider>
 				: <SignIn modal={modal!} />
 			}

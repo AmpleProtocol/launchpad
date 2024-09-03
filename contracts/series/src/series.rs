@@ -19,7 +19,7 @@ impl Contract {
     #[payable]
     pub fn create_series(
         &mut self,
-        // id: u64,
+        id: u64,
         metadata: TokenMetadata,
         content_id: String,
         royalty: Option<HashMap<AccountId, u32>>,
@@ -54,7 +54,7 @@ impl Contract {
         }
 
         // create a new serie_id
-        let new_serie_id = self.create_serie_id();
+        // let new_serie_id = self.create_serie_id();
         // if there are copies specified in the metadata, it means it's a royalty collection and bc
         // of that, we need to add the content to the treasury
         if let Some(copies) = metadata.copies {
@@ -66,7 +66,7 @@ impl Contract {
                     royalty: treasury_royalty.expect("A treasury_royalty field must be provided when creating royalty collections") ,
                 },
                 ReceivedCollection {
-                    collection_id: new_serie_id.clone(),
+                    collection_id: id.clone(),
                     total_supply: copies,
                 },
             )
@@ -76,7 +76,7 @@ impl Contract {
                     .on_content_added(
                         caller.clone(),
                         initial_storage_usage,
-                        new_serie_id,
+                        id.clone(),
                         metadata.clone(),
                         content_id.clone(),
                         royalty.clone(),
@@ -88,7 +88,7 @@ impl Contract {
             self.insert_serie(
                 caller,
                 initial_storage_usage,
-                new_serie_id,
+                id.clone(),
                 metadata,
                 content_id,
                 royalty,
@@ -266,8 +266,8 @@ impl Contract {
         refund_deposit(required_storage_in_bytes);
     }
 
-    fn create_serie_id(&mut self) -> u64 {
-        self.last_serie_id = self.last_serie_id + 1;
-        return self.last_serie_id;
-    }
+    // fn create_serie_id(&mut self) -> u64 {
+    //     self.last_serie_id = self.last_serie_id + 1;
+    //     return self.last_serie_id;
+    // }
 }

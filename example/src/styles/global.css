@@ -55,3 +55,92 @@ div.card {
 	border-radius: 15px;
 	box-shadow: 0 2px 5px #d6d6d6;
 }
+
+.play-card {
+	width: 200px;
+	margin: 15px;
+	border-radius: 10px;
+	overflow: hidden;
+	/* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); */
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	background-color: #f6f6f6;
+	cursor: pointer;
+}
+
+.play-card img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+	object-position: center;
+	display: block;
+	transition: transform 0.3s ease;
+}
+
+.play-card p {
+	padding: 10px 15px;
+	text-align: center;
+	margin: 0;
+	transition: transform 0.3s ease;
+}
+
+.play-card button {
+	position: absolute;
+	cursor: pointer;
+	left: 50%;
+	bottom: 50%;
+	font-size: 32px;
+	transform: translateX(-50%);
+	padding: 8px 16px;
+	background-color: transparent;
+	color: #ffff;
+	font-weight: bolder;
+	text-shadow: 1px 1px 6px black;
+	border: none;
+	border-radius: 5px;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.play-card:hover {
+	transform: scale(1.05);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.play-card:hover img {
+	transform: scale(1.1);
+}
+
+.play-card:hover button {
+	opacity: 1;
+}
+
+/* modal */
+.modal-content {
+	height: 100%;
+}
+
+.modal-content div.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.modal-content div.player {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 70%;
+}
+
+.modal-content h1 {
+	font-size: 24px;
+	font-weight: 300;
+}
+
+.modal-content button.close {
+	border: none;
+	background-color: transparent;
+	font-size: 24px;
+	cursor: pointer;
+	font-weight: 200;
+}

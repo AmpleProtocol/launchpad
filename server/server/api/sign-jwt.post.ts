@@ -23,11 +23,14 @@ interface IBody {
 	* Used to issue JWTs that allows streaming tokengated contents
 */
 export default eventHandler(async event => {
+	setHeader(event, 'Content-Type', 'application/json')
+
 	const { series } = await useContracts()
 	const db = useDatabase()
 
 	// 1. Get private and public server keys, contentId and payload (sig) from body 
 	const { contentId, accountId, payload } = await readBody<IBody>(event)
+
 	const res = await db.sql`SELECT playbackId FROM contents WHERE id = ${contentId} LIMIT 1`
 	if (!res.rows) {
 		setResponseStatus(event, 404)
@@ -42,15 +45,21 @@ export default eventHandler(async event => {
 
 	const playbackId = res.rows[0].playbackId as string
 
-	if (payload.nonce.length != 32) {
+	const nonce = Buffer.from(payload.nonce, 'base64')
+
+	if (nonce.length != 32) {
 		setResponseStatus(event, 400)
 		return { success: false, message: 'nonce must be 32 bytes long' }
 	}
 
 	// 2. Verify signature and get user public key
 	const isValidSignature = verifySignature({
-		...payload,
-		nonce: Buffer.from(payload.nonce, 'base64')
+		publicKey: payload.publicKey,
+		message: payload.message,
+		signature: payload.signature,
+		nonce,
+		recipient: payload.recipient, // the name of the app requesting the access
+		callbackUrl: payload.callbackUrl
 	})
 	if (!isValidSignature) {
 		setResponseStatus(event, 403)

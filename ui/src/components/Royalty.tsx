@@ -32,7 +32,16 @@ export const Royalty: React.FC<GridProps> = (props) => {
 		}
 	}
 
-	if (!collections) return null
+	if (collections?.length == 0 || !collections) return <Box sx={{
+		height: '500px',
+		width: '100%',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		color: '#b5b5b5'
+	}}>
+		You don't own any launchpad NFT yet
+	</Box>
 
 	return <Grid {...props} columns={['1fr 3fr']}>
 		<Box>

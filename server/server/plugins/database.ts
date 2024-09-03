@@ -4,9 +4,9 @@ export default defineNitroPlugin(async () => {
 	// assert tables are created 
 
 	if (process.env.NODE_ENV != 'production') {
-		await db.sql`drop table analytics`
-		await db.sql`drop table contents`
-		console.log('[db]: dropped tables')
+		// await db.sql`drop table analytics`
+		// await db.sql`drop table contents`
+		// console.log('[db]: dropped tables')
 	}
 
 	// contents table

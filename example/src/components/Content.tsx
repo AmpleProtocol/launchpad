@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import LaunchTab from "./LaunchTab"
 import RoyaltyTab from "./RoyaltyTab"
 import PlayTab from "./PlayTab"
@@ -9,6 +9,16 @@ type Tabs = 'launch' | 'royalty' | 'play'
 export const Content = () => {
 	const { wallet } = useLaunchpad()
 	const [tab, setTab] = useState<Tabs>('launch')
+
+	useEffect(() => {
+		const _tab = localStorage.getItem('tab')
+		if (_tab) setTab(_tab as Tabs)
+	}, [])
+
+	const setPersistentTab = (tab: Tabs) => {
+		setTab(tab)
+		localStorage.setItem('tab', tab)
+	}
 
 	const TabComponent = useMemo(() => {
 		switch (tab) {
@@ -23,9 +33,9 @@ export const Content = () => {
 
 	return <>
 		<nav>
-			<button onClick={() => setTab('launch')} className={`nav-link ${tab == 'launch' ? 'active' : ''}`}>Launch</button>
-			<button onClick={() => setTab('royalty')} className={`nav-link ${tab == 'royalty' ? 'active' : ''}`} >Royalty</button>
-			<button onClick={() => setTab('play')} className={`nav-link ${tab == 'play' ? 'active' : ''}`}>Play</button>
+			<button onClick={() => setPersistentTab('launch')} className={`nav-link ${tab == 'launch' ? 'active' : ''}`}>Launch</button>
+			<button onClick={() => setPersistentTab('royalty')} className={`nav-link ${tab == 'royalty' ? 'active' : ''}`} >Royalty</button>
+			<button onClick={() => setPersistentTab('play')} className={`nav-link ${tab == 'play' ? 'active' : ''}`}>Play</button>
 			<button onClick={() => wallet.signOut()} className="nav-link logout">Log out</button>
 		</nav>
 		<main>

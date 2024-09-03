@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react"
 import { useLaunchpad } from "../context"
 import { IPayload } from "@ample-launchpad/client"
-import type { SignedMessage, SignMessageParams } from "@near-wallet-selector/core";
+import { type SignedMessage, type SignMessageParams } from "@near-wallet-selector/core";
 import { VideoPlayer, VideoPlayerProps } from "@videojs-player/react";
+import { Box, Spinner } from "theme-ui";
 // import 'video.js/dist/video-js.css'
+
+interface ISignMessageParamsLocalStorage extends Omit<SignMessageParams, 'nonce'> {
+	nonce: string
+}
 
 const constructPayload = (
 	{ publicKey, signature }: SignedMessage,
-	{ message, recipient, nonce }: SignMessageParams
+	{ message, recipient, nonce, callbackUrl }: ISignMessageParamsLocalStorage
 ): IPayload => {
 	return {
 		publicKey,
 		signature,
 		message,
-		nonce: nonce.toString('base64'),
+		nonce,
 		recipient,
-		callbackUrl: location.href
+		callbackUrl
 	}
 }
 
@@ -28,26 +33,41 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 	const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
 
 	useEffect(() => {
-		if (streamingUrl) return
+		main()
+	}, [])
 
+	const main = async () => {
 		// check for jwt in local storage
-		const streamingUrlFound = checkForStreamingUrl()
-		if (streamingUrlFound) return
+		if (checkForStreamingUrl()) return
 
 		// if not there, check the url for signatures to get access 
-		const sigFound = checkForSignatureInUrl()
-		if (sigFound) return
+		const payload = checkForSignatureInUrl()
+		if (!payload) return signMessage()
 
-		// if none of the above, sign a new message
-		signMessage()
-	}, [streamingUrl])
+		await getAccess(payload)
+	}
 
 	// send payload (signature) to get an access jwt
 	const getAccess = async (payload: IPayload) => {
-		const { streamingUrl: _url } = await getJwt({ contentId, payload })
+		try {
+			const res = await getJwt({ contentId, payload })
 
-		localStorage.setItem(`streaming-url-${contentId}`, _url)
-		setStreamingUrl(_url)
+			if (!res.data.success) throw new Error(res.data.message)
+
+			const { streamingUrl: _url } = res.data.data!
+			localStorage.setItem(`streaming-url-${contentId}`, _url)
+			setStreamingUrl(_url)
+
+			// replace url 
+			const url = new URL(location.href);
+			url.search = ''
+			url.hash = ''
+			window.history.replaceState({}, document.title, url);
+			localStorage.removeItem(`message-to-sign-${contentId}`);
+		} catch (error) {
+			console.error(error)
+			throw error
+		}
 	}
 
 	const checkForStreamingUrl = (): boolean => {
@@ -59,28 +79,18 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 		return true
 	}
 
-	const checkForSignatureInUrl = (): boolean => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const accountId = searchParams.get("accountId") as string;
-		const publicKey = searchParams.get("publicKey") as string;
-		const signature = searchParams.get("signature") as string;
+	const checkForSignatureInUrl = (): IPayload | null => {
+		const hashParams = new URLSearchParams(window.location.hash.slice(1))
+		const accountId = hashParams.get("accountId") as string;
+		const publicKey = hashParams.get("publicKey") as string;
+		const signature = hashParams.get("signature") as string;
 
-		if (!accountId || !publicKey || !signature) return false
+		if (!accountId || !publicKey || !signature) return null
 
-		const message: SignMessageParams = JSON.parse(
+		const message: ISignMessageParamsLocalStorage = JSON.parse(
 			localStorage.getItem(`message-to-sign-${contentId}`)!
 		);
-		const payload = constructPayload({ publicKey, signature, accountId }, message)
-
-		// replace url 
-		localStorage.removeItem(`message-to-sign-${contentId}`);
-		const url = new URL(location.href);
-		url.hash = "";
-		url.search = "";
-		window.history.replaceState({}, document.title, url);
-
-		getAccess(payload)
-		return true
+		return constructPayload({ publicKey, signature, accountId }, message)
 	}
 
 	// sign an arbitrary message to prove wallet ownership
@@ -93,26 +103,34 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 		const recipient = "amplelaunchpad.testnet";
 
 		if (wallet.type === "browser") {
-			localStorage.setItem(`message-to-sign-${contentId}`,
-				JSON.stringify({
-					message,
-					nonce: [...nonce],
-					recipient,
-					callbackUrl: location.href,
-				})
-			);
+			const toLocalStorage: ISignMessageParamsLocalStorage = {
+				message,
+				nonce: nonce.toString('base64'),
+				recipient,
+				callbackUrl: location.href,
+			}
+			localStorage.setItem(`message-to-sign-${contentId}`, JSON.stringify(toLocalStorage));
 		}
 
 		// this is either give the signedMessage as url query searchParams or return it right away 
 		const signedMessage = await wallet.signMessage({ message, nonce, recipient });
 		if (signedMessage) {
 			// handle this signed message
-			const payload = constructPayload(signedMessage, { message, recipient, nonce })
+			const payload = constructPayload(
+				signedMessage,
+				{
+					message,
+					recipient,
+					nonce: nonce.toString('base64')
+				}
+			)
 			getAccess(payload)
 		}
 	};
 
-	if (!streamingUrl) return null
+	if (!streamingUrl) return <Box>
+		<Spinner />
+	</Box>
 
 	// return hls video player
 	return <VideoPlayer src={streamingUrl} {...videoJSProps} />

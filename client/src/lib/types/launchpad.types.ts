@@ -7,7 +7,7 @@ export interface ICreateContentParams {
 	description: string,
 	mediaUrl: string,
 	totalSupply: number,
-	royalty: Royalty,
+	royalty?: Royalty,
 	treasuryRoyalty: TreasuryRoyalty
 }
 

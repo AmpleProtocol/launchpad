@@ -2,12 +2,17 @@ import { IContent } from "@ample-launchpad/client"
 import { useLaunchpad } from "@ample-launchpad/ui"
 import { JsonToken } from "@ample-launchpad/core"
 import { useEffect, useState } from "react"
+import { FaPlay } from "react-icons/fa"
+import { utils } from 'near-api-js'
+import { useModal } from "@/context/ModalContext"
 
 interface IProps {
-	content: IContent
+	content: IContent,
+	owned: boolean
 }
-export default function ContentListItem({ content }: IProps) {
+export default function ContentListItem({ content, owned }: IProps) {
 	const { contracts } = useLaunchpad()
+	const { setContent } = useModal()
 	const [collection, setCollection] = useState<JsonToken | null>(null)
 
 	useEffect(() => {
@@ -20,15 +25,28 @@ export default function ContentListItem({ content }: IProps) {
 		setCollection(serie)
 	}
 
-	return <div>
-		<div>
-			{collection && <img src={collection.metadata.media} alt={collection.metadata.title} />}
-		</div>
+	const onClick = () => {
+		if (!collection) return
+		if (owned) {
+			// open player 
+			setContent(content)
+		} else {
+			// mint nft
+			contracts.series.mint(collection.series_id)
+		}
+	}
 
-		<h2>
-			{content.title}
-		</h2>
+	if (!collection) return null
 
-		<button>Play(tbi)</button>
+	return <div onClick={onClick} className="play-card">
+		{collection && <img style={{ maxHeight: 200 }} src={collection.metadata.media} alt={collection.metadata.title} />}
+
+		<p style={{ fontWeight: 600, fontSize: '25px', margin: '10px 0' }}>{content.title}</p>
+
+		{
+			owned
+				? <button><FaPlay /></button>
+				: <button style={{ fontSize: '24px' }}>{utils.format.formatNearAmount(collection?.price)} NEAR</button>
+		}
 	</div>
 }

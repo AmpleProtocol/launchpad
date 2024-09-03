@@ -9,14 +9,14 @@ export interface JsonToken {
 	series_id: number,
 	owner_id: string,
 	metadata: TokenMetadata,
-	price: number,
+	price: string,
 }
 
 export interface JsonSerie {
 	series_id: number,
 	metadata: TokenMetadata,
 	royalty?: any,
-	price?: number,
+	price?: string,
 	owner_id: string,
 	content_id: string,
 }
