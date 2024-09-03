@@ -1,4 +1,4 @@
-import { Box, BoxProps, Container, Flex, Grid, Image, Input, Label, Spinner } from "theme-ui"
+import { Box, BoxProps, Container, Flex, Grid, Image, Input, Label, Progress, Spinner, Text } from "theme-ui"
 import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./lib/ErrorMessage";
@@ -25,13 +25,13 @@ interface ILaunchProps extends BoxProps {
 
 export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgress, ...props }) => {
 	const { createContent, wallet } = useLaunchpad()
-	const { handleSubmit, register, setValue, watch, formState: { errors } } = useForm<IFormData>({
+	const { handleSubmit, register, setValue, watch, reset, formState: { errors } } = useForm<IFormData>({
 		defaultValues: {
 			totalSupply: 100000,
 			price: '10'
 		}
 	})
-	const [loading, setLoading] = useState<boolean>(false)
+	const [progress, setProgress] = useState<number | undefined>()
 	const mediaUrl = watch('mediaUrl')
 
 	useEffect(() => {
@@ -51,7 +51,7 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 		const file = data.file.item(0)
 		if (!file) return
 
-		setLoading(true)
+		setProgress(5)
 
 		try {
 			const yoctoPrice = utils.format.parseNearAmount(data.price)
@@ -73,6 +73,8 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 			})
 			if (!res.data.success || !res.data.data) throw new Error(res.data.message!)
 
+			setProgress(10)
+
 			// create a new Upload 
 			const upload = new Upload(file, {
 				endpoint: res.data.data.tusEndpoint,
@@ -87,11 +89,14 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 				},
 				onProgress: (bytesUploaded, bytesTotal) => {
 					const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
-					onUploadProgress && onUploadProgress(Number(percentage))
+					const asNumber = Number(percentage)
+					onUploadProgress && onUploadProgress(asNumber)
+					if (asNumber > 10) setProgress(asNumber)
 				},
 				onSuccess: () => {
 					// notify user back about the created content
-					setLoading(false)
+					reset()
+					setProgress(undefined)
 					onContentCreated && onContentCreated({
 						contentId: res.data.data!.contentId,
 						collectionId: res.data.data!.collectionId
@@ -101,7 +106,6 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 
 			upload.start()
 		} catch (error) {
-			setLoading(false)
 			throw error
 		}
 	}
@@ -195,10 +199,18 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 					}
 
 					<Box>
-						{loading && <Box><Spinner /></Box>}
-						<Flex sx={{ justifyContent: 'end' }}>
-							<Input variant="launchButton" type="submit" disabled={loading} value='Launch' />
-						</Flex>
+						{
+							progress
+								? <Box>
+									<Text sx={{ textAlign: 'center', fontWeight: 300 }}>
+										Launching your content...
+									</Text>
+									<Progress sx={{ height: '10px' }} max={100} value={progress} />
+								</Box>
+								: <Flex sx={{ justifyContent: 'end' }}>
+									<Input variant="launchButton" type="submit" value='Launch' />
+								</Flex>
+						}
 					</Box>
 				</Flex>
 			</Container>

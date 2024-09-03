@@ -20,6 +20,11 @@ export const theme: Theme = {
 		heading: '"Avenir Next", sans-serif',
 		monospace: 'Menlo, monospace',
 	},
+	styles: {
+		progress: {
+			backgroundColor: 'whitesmoke'
+		}
+	},
 	forms: {
 		label: {
 			display: 'block'
