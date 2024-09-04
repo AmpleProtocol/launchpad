@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useLaunchpad } from "../context"
 import { IPayload } from "@ample-launchpad/client"
 import { type SignedMessage, type SignMessageParams } from "@near-wallet-selector/core";
-import { Box, Spinner } from "theme-ui";
+import { Box, Button, Spinner } from "theme-ui";
 import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 
@@ -38,12 +38,15 @@ interface IPlayerProps {
 export const Player: React.FC<IPlayerProps> = ({ contentId, title }) => {
 	const { getJwt, wallet } = useLaunchpad()
 	const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
+	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
 		main()
 	}, [])
 
 	const main = async () => {
+		if (errorsInUrl()) return
+
 		// check for jwt in local storage
 		if (checkForStreamingUrl()) return
 
@@ -80,6 +83,19 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, title }) => {
 			console.error(error)
 			throw error
 		}
+	}
+
+	const errorsInUrl = (): boolean => {
+		// something like http://localhost:3000/#error=User%20rejected&.
+		// that one gets returned after user cancelled signature from mynearwallet
+		if (!window.location.hash) return false
+		const hashParams = new URLSearchParams(window.location.hash.slice(1))
+
+		const error = hashParams.get('error') as string
+		if (!error) return false
+
+		setError(error)
+		return true
 	}
 
 	const checkForStreamingUrl = (): boolean => {
@@ -150,6 +166,19 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, title }) => {
 			getAccess(payload)
 		}
 	};
+
+	const tryAgain = () => {
+		const url = new URL(location.href);
+		url.hash = ''
+		window.history.replaceState({}, document.title, url);
+
+		main()
+	}
+
+	if (error) return <Box>
+		<pre>{error}</pre>
+		<Button onClick={tryAgain}>Try again</Button>
+	</Box>
 
 	if (!streamingUrl) return <Box>
 		<Spinner />
