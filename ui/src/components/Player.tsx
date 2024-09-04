@@ -2,12 +2,19 @@ import { useEffect, useState } from "react"
 import { useLaunchpad } from "../context"
 import { IPayload } from "@ample-launchpad/client"
 import { type SignedMessage, type SignMessageParams } from "@near-wallet-selector/core";
-import { VideoPlayer, VideoPlayerProps } from "@videojs-player/react";
 import { Box, Spinner } from "theme-ui";
-// import 'video.js/dist/video-js.css'
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
+import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
+
+const ONE_DAY_MS = 86400000
+const TWO_HOURS_MS = 7200000
 
 interface ISignMessageParamsLocalStorage extends Omit<SignMessageParams, 'nonce'> {
 	nonce: string
+}
+interface IUrlData {
+	url: string,
+	expires: number
 }
 
 const constructPayload = (
@@ -26,9 +33,9 @@ const constructPayload = (
 
 interface IPlayerProps {
 	contentId: string,
-	videoJSProps: Omit<VideoPlayerProps, 'src'>
+	title: string
 }
-export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
+export const Player: React.FC<IPlayerProps> = ({ contentId, title }) => {
 	const { getJwt, wallet } = useLaunchpad()
 	const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
 
@@ -42,7 +49,7 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 
 		// if not there, check the url for signatures to get access 
 		const payload = checkForSignatureInUrl()
-		if (!payload) return signMessage()
+		if (!payload) return await signMessage()
 
 		await getAccess(payload)
 	}
@@ -55,7 +62,12 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 			if (!res.data.success) throw new Error(res.data.message)
 
 			const { streamingUrl: _url } = res.data.data!
-			localStorage.setItem(`streaming-url-${contentId}`, _url)
+
+			const urlData: IUrlData = {
+				url: _url,
+				expires: Date.now() + ONE_DAY_MS // todo: receive expiration time from server
+			}
+			localStorage.setItem(`ample::streaming-url-${contentId}`, JSON.stringify(urlData))
 			setStreamingUrl(_url)
 
 			// replace url 
@@ -63,7 +75,7 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 			url.search = ''
 			url.hash = ''
 			window.history.replaceState({}, document.title, url);
-			localStorage.removeItem(`message-to-sign-${contentId}`);
+			localStorage.removeItem(`ample::message-to-sign-${contentId}`);
 		} catch (error) {
 			console.error(error)
 			throw error
@@ -72,10 +84,20 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 
 	const checkForStreamingUrl = (): boolean => {
 		// Check in localStorage for jwt
-		const _url = localStorage.getItem(`streaming-url-${contentId}`)
-		if (!_url) return false
+		const urlDataRaw = localStorage.getItem(`ample::streaming-url-${contentId}`)
+		if (!urlDataRaw) return false
+
+		const urlData = JSON.parse(urlDataRaw) as IUrlData
+
+		//todo: check validity
+		const now = Date.now()
+		// we substract two hours to the expiration time to assure at least two hours of 
+		// uninterrumpted streaming 
+		const exp = urlData.expires - TWO_HOURS_MS
+		if (now > exp) return false
+
 		// update state
-		setStreamingUrl(_url)
+		setStreamingUrl(urlData.url)
 		return true
 	}
 
@@ -87,9 +109,10 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 
 		if (!accountId || !publicKey || !signature) return null
 
-		const message: ISignMessageParamsLocalStorage = JSON.parse(
-			localStorage.getItem(`message-to-sign-${contentId}`)!
-		);
+		const messageRaw = localStorage.getItem(`ample::message-to-sign-${contentId}`)
+		if (!messageRaw) return null
+
+		const message = JSON.parse(messageRaw) as ISignMessageParamsLocalStorage;
 		return constructPayload({ publicKey, signature, accountId }, message)
 	}
 
@@ -109,10 +132,10 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 				recipient,
 				callbackUrl: location.href,
 			}
-			localStorage.setItem(`message-to-sign-${contentId}`, JSON.stringify(toLocalStorage));
+			localStorage.setItem(`ample::message-to-sign-${contentId}`, JSON.stringify(toLocalStorage));
 		}
 
-		// this is either give the signedMessage as url query searchParams or return it right away 
+		// this will either give the signedMessage as url query searchParams or return it right away 
 		const signedMessage = await wallet.signMessage({ message, nonce, recipient });
 		if (signedMessage) {
 			// handle this signed message
@@ -132,7 +155,9 @@ export const Player: React.FC<IPlayerProps> = ({ contentId, videoJSProps }) => {
 		<Spinner />
 	</Box>
 
-	// return hls video player
-	return <VideoPlayer src={streamingUrl} {...videoJSProps} />
+	return <MediaPlayer style={{ height: '100%' }} autoplay title={title} src={streamingUrl}>
+		<MediaProvider />
+		<DefaultVideoLayout icons={defaultLayoutIcons} />
+	</MediaPlayer>
 }
 

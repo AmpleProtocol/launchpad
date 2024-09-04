@@ -61,7 +61,6 @@ div.card {
 	margin: 15px;
 	border-radius: 10px;
 	overflow: hidden;
-	/* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); */
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 	background-color: #f6f6f6;
 	cursor: pointer;
@@ -73,12 +72,14 @@ div.card {
 	object-fit: cover;
 	object-position: center;
 	display: block;
-	transition: transform 0.3s ease;
+	transition: filter 0.3s ease-out;
 }
 
 .play-card p {
 	padding: 10px 15px;
 	text-align: center;
+	font-weight: 600;
+	font-size: 20px;
 	margin: 0;
 	transition: transform 0.3s ease;
 }
@@ -107,7 +108,8 @@ div.card {
 }
 
 .play-card:hover img {
-	transform: scale(1.1);
+	filter: brightness(0.4);
+	transition: filter 0.3s ease;
 }
 
 .play-card:hover button {
@@ -117,6 +119,8 @@ div.card {
 /* modal */
 .modal-content {
 	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .modal-content div.header {
@@ -126,10 +130,10 @@ div.card {
 }
 
 .modal-content div.player {
+	height: 90%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 70%;
 }
 
 .modal-content h1 {

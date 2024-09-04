@@ -20,7 +20,7 @@ export async function createJwt(
 		publicKey: jwtPublicKey,
 		issuer,
 		playbackId: referenceId,
-		// expiration: 86400 // default value for now
+		// expiration: 86400 // default value for now (one day in seconds)
 		custom: metadata
 	})
 

@@ -13,7 +13,7 @@ export default function ModalContent({ content, onClose }: IProps) {
 		</div>
 
 		<div className="player">
-			<Player contentId={content.id} videoJSProps={{}} />
+			<Player contentId={content.id} title={content.title} />
 		</div>
 	</div>
 }

@@ -3,6 +3,8 @@ import { IContent } from "@ample-launchpad/client"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import Modal from 'react-modal'
 
+Modal.setAppElement('#__next')
+
 const modalStyles = {
 	content: {
 		border: 'none',

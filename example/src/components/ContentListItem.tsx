@@ -41,11 +41,12 @@ export default function ContentListItem({ content, owned }: IProps) {
 	return <div onClick={onClick} className="play-card">
 		{collection && <img style={{ maxHeight: 200 }} src={collection.metadata.media} alt={collection.metadata.title} />}
 
-		<p style={{ fontWeight: 600, fontSize: '25px', margin: '10px 0' }}>{content.title}</p>
+		{/* <p style={{ fontWeight: 600, fontSize: '25px', margin: '10px 0' }}>{content.title}</p> */}
+		<p>{content.title}</p>
 
 		{
 			owned
-				? <button><FaPlay /></button>
+				? <button><FaPlay style={{ textShadow: '1px 1px 6px black' }} /></button>
 				: <button style={{ fontSize: '24px' }}>{utils.format.formatNearAmount(collection?.price)} NEAR</button>
 		}
 	</div>
