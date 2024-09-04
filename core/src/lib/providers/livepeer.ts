@@ -39,12 +39,20 @@ export class LivepeerProvider implements IProvider {
 		from?: Date | undefined,
 		to?: Date | undefined
 	): Promise<number> {
-		let query: GetViewershipMetricsRequest = {
-			playbackId: referenceId,
+		if (!from) {
+			// if no 'from' is provided, getViewership() call will throw a 'bytes exceeded' error.
+			// we can get the total viewCount from getPublicViewership() with no issues though
+			const res = await this.livepeer.metrics.getPublicViewership(referenceId)
+			if (!res || !res.data || !res.data.viewCount) return 0
+
+			return res.data.viewCount
 		}
 
-		if (from) query.from = from
-		if (from && to) query.to = to
+		let query: GetViewershipMetricsRequest = {
+			playbackId: referenceId,
+			from,
+			to: to || undefined
+		}
 
 		// retrieve viewership metrics for this content
 		const res = await this.livepeer.metrics.getViewership(query)
