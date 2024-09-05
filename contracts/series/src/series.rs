@@ -210,9 +210,13 @@ impl Contract {
         //calculate the required storage which was the used - initial
         let required_storage_in_bytes = env::storage_usage() - initial_storage_usage;
 
-        // If there's some price for the token, we'll payout the series owner. Otherwise, refund the excess deposit for storage to the caller
+        // If there's some price for the token, we'll payout the treasury. Otherwise, refund the excess deposit for storage to the caller
         if price_per_token > 0 {
-            payout_series_owner(required_storage_in_bytes, price_per_token, series.owner_id);
+            payout_series_owner(
+                required_storage_in_bytes,
+                price_per_token,
+                self.treasury_contract_address.clone(),
+            );
         } else {
             refund_deposit(required_storage_in_bytes);
         }
