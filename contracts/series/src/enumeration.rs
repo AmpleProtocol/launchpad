@@ -13,6 +13,7 @@ pub struct JsonSeries {
     price: Option<U128>,
     owner_id: AccountId,
     content_id: String,
+    valid_period: Option<u64>,
 }
 
 #[derive(Serialize)]
@@ -166,6 +167,7 @@ impl Contract {
                 price: Some(U128::from(series.price.unwrap_or(0))),
                 owner_id: series.owner_id,
                 content_id: series.content_id,
+                valid_period: series.valid_period,
             })
         } else {
             //if there isn't a series, we'll return None
