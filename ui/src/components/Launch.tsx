@@ -1,4 +1,4 @@
-import { Box, BoxProps, Container, Flex, Grid, Image, Input, Label, Progress, Select, Text } from "theme-ui"
+import { Box, BoxProps, Container, Flex, Grid, Image, Input, Label, Progress, Text } from "theme-ui"
 import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./lib/ErrorMessage";
@@ -7,11 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Upload } from "tus-js-client";
 import { utils } from "near-api-js";
 
-enum TimePeriods {
-	DAY = "86400000",
-	WEEK = "604800000",
-	MONTH = "2629746000"
-}
+const ONE_DAY_MS = 86400000
 
 interface IFormData extends Omit<ICreateContentParams, 'royaltyCollection' | 'rentalCollection'> {
 	file: FileList,
@@ -22,7 +18,7 @@ interface IFormData extends Omit<ICreateContentParams, 'royaltyCollection' | 're
 	holdersRoyalty: string,
 	// for rental collection 
 	rentalPrice: string,
-	rentalValidPeriod: TimePeriods
+	rentalValidDays: string,
 }
 
 interface ICreateContentResponse {
@@ -45,7 +41,7 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 			holdersRoyalty: '40',
 			royaltyPrice: '10',
 			rentalPrice: '1',
-			rentalValidPeriod: TimePeriods.DAY
+			rentalValidDays: '1',
 		}
 	})
 	const [progress, setProgress] = useState<number | undefined>()
@@ -108,7 +104,7 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 				},
 				rentalCollection: {
 					price: rentalYoctoPrice,
-					validPeriodMs: Number(data.rentalValidPeriod)
+					validPeriodMs: Number(data.rentalValidDays) * ONE_DAY_MS
 				}
 			})
 			if (!res.data.success || !res.data.data) throw new Error(res.data.message!)
@@ -218,13 +214,10 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 						</Label>
 						<ErrorMessage fieldError={errors.rentalPrice} />
 						<Label>
-							Valid for
-							<Select {...register('rentalValidPeriod', { required: 'Valid period of time is required' })}>
-								<option value={TimePeriods.DAY}>One Day</option>
-								<option value={TimePeriods.WEEK}>One Week</option>
-								<option value={TimePeriods.MONTH}>One Month</option>
-							</Select>
+							Valid for (in days)
+							<Input type="number" {...register('rentalValidDays', { required: 'This field is required', min: 1 })} />
 						</Label>
+						<ErrorMessage fieldError={errors.rentalValidDays} />
 					</Box>
 				</Grid>
 
