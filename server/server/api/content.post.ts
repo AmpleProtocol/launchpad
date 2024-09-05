@@ -88,6 +88,7 @@ export default eventHandler(async event => {
 	await db.sql`INSERT INTO contents VALUES (
 		${contentId},
 		${title},
+		${media},
 		${royaltyCollectionId},
 		${rentalCollectionId},
 		${playbackId},
