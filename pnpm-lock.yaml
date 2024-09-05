@@ -133,6 +133,9 @@ importers:
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
+      near-api-js:
+        specifier: ^4.0.3
+        version: 4.0.3
     devDependencies:
       '@types/uuid':
         specifier: ^10.0.0

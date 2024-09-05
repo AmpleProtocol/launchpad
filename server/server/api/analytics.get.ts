@@ -1,3 +1,4 @@
+import { utils } from "near-api-js"
 import { IAnalytic } from "~/types/analytics.type"
 import { IContent } from "~/types/content.type"
 
@@ -46,7 +47,8 @@ export default eventHandler(async event => {
 	const issuedTokens = await series.tokensByTimeRange(rangeInMs, content.collectionId)
 
 	// total generated in the given range = tokenPrice * issuedTokens
-	const totalGenerated = collection.price * issuedTokens
+	const priceAsNear = Number(utils.format.formatNearAmount(collection.price))
+	const totalGenerated = priceAsNear * issuedTokens
 
 	// 2. GET ANALYTICS
 	const now = Date.now()
