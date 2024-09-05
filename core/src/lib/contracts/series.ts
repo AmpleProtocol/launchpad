@@ -8,6 +8,7 @@ interface ICreateSeriesParams {
 	contentId: string,
 	royalty: Royalty | null,
 	treasuryRoyalty: TreasuryRoyalty | null,
+	validPeriod: number | null,
 	price: string | null,
 	owner: string
 }
@@ -69,7 +70,7 @@ export class Series extends Contract {
 	}
 
 	/** Creates a new collection in the series contract, must be called by an approved creator */
-	createSeries({ id, metadata, contentId, royalty, treasuryRoyalty, price, owner }: ICreateSeriesParams) {
+	createSeries({ id, metadata, contentId, royalty, treasuryRoyalty, validPeriod, price, owner }: ICreateSeriesParams) {
 		return this.call('create_series', {
 			id,
 			metadata,
@@ -78,6 +79,7 @@ export class Series extends Contract {
 			treasury_royalty: treasuryRoyalty,
 			price,
 			owner,
+			valid_period: validPeriod
 		}, THIRTY_TGAS, '393000000000000000000000')
 	}
 }

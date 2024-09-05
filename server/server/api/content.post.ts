@@ -1,17 +1,26 @@
-import { Royalty, TokenMetadata, TreasuryRoyalty } from '@ample-launchpad/core'
+import { Royalty, TreasuryRoyalty } from '@ample-launchpad/core'
 import { nanoid, customAlphabet } from 'nanoid'
 
 const numericid = customAlphabet('123456789', 16);
 
+interface IRentalCollection {
+	price: string,
+	royalty?: Royalty,
+	validPeriodMs: number
+}
+
+interface IRoyaltyCollection extends Omit<IRentalCollection, 'validPeriodMs'> {
+	totalSupply: number,
+	treasuryRoyalty: TreasuryRoyalty
+}
+
 interface IBody {
 	owner: string,
-	price: string,
 	title: string,
 	description: string,
 	mediaUrl: string,
-	totalSupply: number,
-	royalty?: Royalty,
-	treasuryRoyalty: TreasuryRoyalty
+	royaltyCollection: IRoyaltyCollection,
+	rentalCollection: IRentalCollection,
 }
 
 /**
@@ -22,61 +31,78 @@ export default eventHandler(async event => {
 	const { series } = await useContracts()
 
 	const contentId = nanoid()
-	const collectionId = parseInt(numericid())
+	const royaltyCollectionId = parseInt(numericid())
+	const rentalCollectionId = parseInt(numericid())
 
 	// 1. read body
 	const {
+		owner,
 		title,
 		description,
-		mediaUrl,
-		totalSupply,
-		price,
-		owner,
-		royalty,
-		treasuryRoyalty
+		mediaUrl: media,
+		royaltyCollection,
+		rentalCollection
 	} = await readBody<IBody>(event)
 
-	// 2. create collection
-	// todo: assert collection was created properly
-	const metadata: TokenMetadata = {
-		title,
-		description,
-		media: mediaUrl,
-		copies: totalSupply,
-	}
+	// 2. create nft collections
+	console.log('Creating NFT collections...')
+	// royalty
 	await series.createSeries({
-		id: collectionId,
+		id: royaltyCollectionId,
+		owner,
 		contentId,
-		metadata,
-		royalty: royalty || null,
-		treasuryRoyalty,
-		price,
-		owner
+		metadata: {
+			title: `${title} Royalty NFT`,
+			description,
+			media,
+			copies: royaltyCollection.totalSupply
+		},
+		royalty: royaltyCollection.royalty || null,
+		treasuryRoyalty: royaltyCollection.treasuryRoyalty,
+		validPeriod: null,
+		price: royaltyCollection.price,
 	})
-	console.log('Done creating collection to series contract')
-	console.log({ metadata })
+	// rental
+	await series.createSeries({
+		id: rentalCollectionId,
+		owner,
+		contentId,
+		metadata: {
+			title: `${title} Rental NFT`,
+			description,
+			media
+		},
+		royalty: rentalCollection.royalty || null,
+		treasuryRoyalty: null,
+		validPeriod: rentalCollection.validPeriodMs,
+		price: rentalCollection.price,
+	})
+	console.log('Done creating royalty and rental collections')
 
 	// 3. create provider asset (won't upload the content)
 	const { assetId, playbackId, tusEndpoint, uploadEndpoint } = await livepeer.createAsset(title)
-	console.log(`Done creating livepeer asset`)
+	console.log(`Livepeer asset created`)
 	console.log({ assetId, tusEndpoint, playbackId })
 
 	// 4. create db record
 	await db.sql`INSERT INTO contents VALUES (
 		${contentId},
 		${title},
-		${collectionId},
+		${royaltyCollectionId},
+		${rentalCollectionId},
 		${playbackId},
 		${assetId}
 	)`;
-	console.log(`Done adding to db`)
+	console.log(`Content added to db`)
+	console.log({ contentId, royaltyCollectionId, rentalCollectionId })
 
 	// 5. return the tusUrl for user to upload the actual file
 	return {
 		success: true,
 		data: {
 			contentId,
-			collectionId,
+			royaltyCollectionId,
+			rentalCollectionId,
 			tusEndpoint,
 			uploadEndpoint,
 		}

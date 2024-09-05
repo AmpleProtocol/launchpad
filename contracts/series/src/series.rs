@@ -5,8 +5,8 @@ use treasury_ext::{ReceivedCollection, ReceivedContent, Royalty};
 
 use crate::*;
 
-// const ONE_DAY_MS: u64 = 86400000;
-const FIVE_MINUTES_MS: u64 = 300000;
+// this is now dynamic
+// const FIVE_MINUTES_MS: u64 = 300000;
 const MAX_COPIES_ALLOWED: u64 = 100_000_000_000;
 
 #[near_bindgen]
@@ -26,6 +26,7 @@ impl Contract {
         treasury_royalty: Option<Royalty>,
         price: Option<U128>,
         owner: AccountId,
+        valid_period: Option<u64>,
     ) {
         // Measure the initial storage being used on the contract
         let initial_storage_usage = env::storage_usage();
@@ -82,6 +83,7 @@ impl Contract {
                         royalty.clone(),
                         price,
                         owner.clone(),
+                        valid_period
                     ),
             );
         } else {
@@ -94,6 +96,7 @@ impl Contract {
                 royalty,
                 price,
                 owner,
+                valid_period,
             )
         }
     }
@@ -110,6 +113,7 @@ impl Contract {
         royalty: Option<HashMap<AccountId, u32>>,
         price: Option<U128>,
         owner: AccountId,
+        valid_period: Option<u64>,
     ) {
         if let PromiseResult::Failed = env::promise_result(0) {
             panic!("Something went wrong adding the content to treasury")
@@ -124,6 +128,7 @@ impl Contract {
             royalty,
             price,
             owner,
+            valid_period,
         )
     }
 
@@ -180,8 +185,10 @@ impl Contract {
             expires_at: None,
         };
 
-        if series.metadata.copies.is_none() {
-            token.expires_at = Some(now + FIVE_MINUTES_MS);
+        if let Some(valid_period) = series.valid_period {
+            if series.metadata.copies.is_none() {
+                token.expires_at = Some(now + valid_period)
+            }
         }
 
         //insert the token ID and token struct and make sure that the token doesn't exist
@@ -239,6 +246,7 @@ impl Contract {
         royalty: Option<HashMap<AccountId, u32>>,
         price: Option<U128>,
         owner: AccountId,
+        valid_period: Option<u64>,
     ) {
         assert_at_least_one_yocto();
 
@@ -256,7 +264,8 @@ impl Contract {
                         }),
                         owner_id: owner,
                         price: price.map(|p| p.into()),
-                        content_id
+                        content_id,
+                        valid_period
                     }
                 )
                 .is_none(),
