@@ -4,6 +4,8 @@ export default function LaunchTab() {
 
 	return <Launch
 		onUploadProgress={(progress) => { console.log({ progress }) }}
-		onContentCreated={({ collectionId, contentId }) => { console.log({ collectionId, contentId }) }}
+		onContentCreated={({ royaltyCollectionId, rentalCollectionId, contentId }) => {
+			console.log({ royaltyCollectionId, rentalCollectionId, contentId })
+		}}
 	/>
 }

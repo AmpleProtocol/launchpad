@@ -5,13 +5,19 @@ import ContentListItem from "./ContentListItem"
 
 export default function ContentsList() {
 	const { getContents, contracts } = useLaunchpad()
-	const [ownedSeries, setOwnedSeries] = useState<number[]>([])
+	const [ownedRoyalty, setOwnedRoyalty] = useState<number[]>([])
 	const [contents, setContents] = useState<IContent[]>([])
 
 	useEffect(() => {
 		fetchOwnedSeries()
 		fetchContents()
 	}, [])
+
+	const fetchOwnedSeries = async () => {
+		const _ownedRoyalty = await contracts.series.nftSeriesForOwner('royalty')
+		console.log({ _ownedRoyalty })
+		setOwnedRoyalty(_ownedRoyalty.map(s => s.series_id))
+	}
 
 	const fetchContents = async () => {
 		try {
@@ -23,11 +29,6 @@ export default function ContentsList() {
 		} catch (error) {
 			console.error(error)
 		}
-	}
-
-	const fetchOwnedSeries = async () => {
-		const _series = await contracts.series.nftSeriesForOwner('royalty')
-		setOwnedSeries(_series.map(s => s.series_id))
 	}
 
 	if (contents.length == 0) return <div
@@ -43,7 +44,13 @@ export default function ContentsList() {
 		No contents available
 	</div>
 
-	return <div style={{ display: 'flex' }}>
-		{contents.map((content, index) => <ContentListItem owned={ownedSeries.includes(content.collectionId)} content={content} key={index} />)}
+	return <div>
+		<div style={{ display: 'flex' }}>
+			{contents.map((content, index) => <ContentListItem
+				owned={ownedRoyalty.includes(content.royaltyCollectionId)}
+				content={content}
+				key={index}
+			/>)}
+		</div>
 	</div>
 }

@@ -37,7 +37,9 @@ export interface IGetJwtParams {
 export interface IContent {
 	id: string,
 	title: string,
-	collectionId: number,
+	media: string,
+	royaltyCollectionId: number,
+	rentalCollectionId: number,
 	playbackId: string,
 	assetId: string
 }
