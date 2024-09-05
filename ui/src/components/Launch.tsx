@@ -1,4 +1,4 @@
-import { Box, BoxProps, Container, Flex, Grid, Image, Input, Label, Progress, Spinner, Text } from "theme-ui"
+import { Box, BoxProps, Container, Flex, Grid, Image, Input, Label, Progress, Select, Text } from "theme-ui"
 import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./lib/ErrorMessage";
@@ -7,15 +7,28 @@ import { useEffect, useMemo, useState } from "react";
 import { Upload } from "tus-js-client";
 import { utils } from "near-api-js";
 
-interface IFormData extends Omit<ICreateContentParams, 'treasuryRoyalty'> {
+enum TimePeriods {
+	DAY = "86400000",
+	WEEK = "604800000",
+	MONTH = "2629746000"
+}
+
+interface IFormData extends Omit<ICreateContentParams, 'royaltyCollection' | 'rentalCollection'> {
 	file: FileList,
-	ownerRoyalty: number,
-	holdersRoyalty: number
+	// for royalty collection 
+	royaltyPrice: string,
+	totalSupply: string,
+	ownerRoyalty: string,
+	holdersRoyalty: string,
+	// for rental collection 
+	rentalPrice: string,
+	rentalValidPeriod: TimePeriods
 }
 
 interface ICreateContentResponse {
 	contentId: string,
-	collectionId: string,
+	royaltyCollectionId: number,
+	rentalCollectionId: number,
 }
 
 interface ILaunchProps extends BoxProps {
@@ -25,10 +38,14 @@ interface ILaunchProps extends BoxProps {
 
 export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgress, ...props }) => {
 	const { createContent, wallet } = useLaunchpad()
-	const { handleSubmit, register, setValue, watch, reset, formState: { errors } } = useForm<IFormData>({
+	const { handleSubmit, register, setValue, setError, watch, reset, formState: { errors } } = useForm<IFormData>({
 		defaultValues: {
-			totalSupply: 100000,
-			price: '10'
+			totalSupply: '100000',
+			ownerRoyalty: '60',
+			holdersRoyalty: '40',
+			royaltyPrice: '10',
+			rentalPrice: '1',
+			rentalValidPeriod: TimePeriods.DAY
 		}
 	})
 	const [progress, setProgress] = useState<number | undefined>()
@@ -51,24 +68,47 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 		const file = data.file.item(0)
 		if (!file) return
 
+		// validate treasuryRoyalty
+		if (Number(data.ownerRoyalty) > 100) {
+			setError('ownerRoyalty', {
+				type: 'manual',
+				message: "Owner royalty can't exceed 100%"
+			})
+			return
+		}
+		if (Number(data.ownerRoyalty) + Number(data.holdersRoyalty) !== 100) {
+			setError('holdersRoyalty', {
+				type: 'manual',
+				message: "Owner + holders royalties must add up to 100%"
+			})
+			return
+		}
+
 		setProgress(5)
 
 		try {
-			const yoctoPrice = utils.format.parseNearAmount(data.price)
+			const royaltyYoctoPrice = utils.format.parseNearAmount(data.royaltyPrice)
+			const rentalYoctoPrice = utils.format.parseNearAmount(data.rentalPrice)
 
-			if (!yoctoPrice) throw new Error('Invalid price')
+			if (!royaltyYoctoPrice || !rentalYoctoPrice) throw new Error('Invalid price')
 
 			// create the content and collection
 			const res = await createContent({
 				owner: data.owner,
-				price: yoctoPrice,
 				title: data.title,
 				description: data.description,
 				mediaUrl: data.mediaUrl,
-				totalSupply: Number(data.totalSupply),
-				treasuryRoyalty: {
-					owner: Number(data.ownerRoyalty),
-					holders: Number(data.holdersRoyalty)
+				royaltyCollection: {
+					price: royaltyYoctoPrice,
+					totalSupply: Number(data.totalSupply),
+					treasuryRoyalty: {
+						owner: Number(data.ownerRoyalty),
+						holders: Number(data.holdersRoyalty)
+					}
+				},
+				rentalCollection: {
+					price: rentalYoctoPrice,
+					validPeriodMs: Number(data.rentalValidPeriod)
 				}
 			})
 			if (!res.data.success || !res.data.data) throw new Error(res.data.message!)
@@ -99,7 +139,8 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 					setProgress(undefined)
 					onContentCreated && onContentCreated({
 						contentId: res.data.data!.contentId,
-						collectionId: res.data.data!.collectionId
+						royaltyCollectionId: res.data.data!.royaltyCollectionId,
+						rentalCollectionId: res.data.data!.rentalCollectionId,
 					})
 				},
 			})
@@ -134,39 +175,59 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 				</Label>
 				<ErrorMessage fieldError={errors.description} />
 
-				<h2>NFT collection</h2>
-				<Label>
-					Total supply
-					<Input type="number" {...register('totalSupply', { required: 'Total Supply is required' })} />
-				</Label>
-				<ErrorMessage fieldError={errors.totalSupply} />
-				<Label>
-					Price (in NEAR)
-					<Input type="number" {...register('price', { required: 'Price is required' })} />
-				</Label>
-				<ErrorMessage fieldError={errors.price} />
-				<Label>
-					Media
-					<Input type="url" {...register('mediaUrl', { required: 'Media url is required' })} />
-				</Label>
-				<ErrorMessage fieldError={errors.mediaUrl} />
+				<h2>NFT collections</h2>
 				<Label>
 					Owner
 					<Input {...register('owner', { required: 'Owner is required' })} />
 				</Label>
 				<ErrorMessage fieldError={errors.owner} />
+				<Label>
+					Media
+					<Input type="url" {...register('mediaUrl', { required: 'Media url is required' })} />
+				</Label>
+				<ErrorMessage fieldError={errors.mediaUrl} />
+				<Grid columns='1fr 1fr'>
+					<Box>
+						<h3>Royalty NFT</h3>
+						<Label>
+							Price (in NEAR)
+							<Input type="number" {...register('royaltyPrice', { required: 'Price is required' })} />
+						</Label>
+						<ErrorMessage fieldError={errors.royaltyPrice} />
+						<Label>
+							Total supply
+							<Input type="number" {...register('totalSupply', { required: 'Total Supply is required' })} />
+						</Label>
+						<ErrorMessage fieldError={errors.totalSupply} />
+						<Label>
+							Owner royalty
+							<Input type="number" {...register('ownerRoyalty', { required: 'This field is required' })} />
+						</Label>
+						<ErrorMessage fieldError={errors.ownerRoyalty} />
+						<Label>
+							Holders royalty
+							<Input type="number" {...register('holdersRoyalty', { required: 'This field is required' })} />
+						</Label>
+						<ErrorMessage fieldError={errors.holdersRoyalty} />
+					</Box>
+					<Box>
+						<h3>Rental NFT</h3>
+						<Label>
+							Price (in NEAR)
+							<Input type="number" {...register('rentalPrice', { required: 'Price is required' })} />
+						</Label>
+						<ErrorMessage fieldError={errors.rentalPrice} />
+						<Label>
+							Valid for
+							<Select {...register('rentalValidPeriod', { required: 'Valid period of time is required' })}>
+								<option value={TimePeriods.DAY}>One Day</option>
+								<option value={TimePeriods.WEEK}>One Week</option>
+								<option value={TimePeriods.MONTH}>One Month</option>
+							</Select>
+						</Label>
+					</Box>
+				</Grid>
 
-				<h2>Royalty</h2>
-				<Label>
-					Owner royalty
-					<Input type="number" {...register('ownerRoyalty', { required: 'This field is required' })} />
-				</Label>
-				<ErrorMessage fieldError={errors.ownerRoyalty} />
-				<Label>
-					Holders royalty
-					<Input type="number" {...register('holdersRoyalty', { required: 'This field is required' })} />
-				</Label>
-				<ErrorMessage fieldError={errors.holdersRoyalty} />
 			</Container>
 
 			{/* media field */}

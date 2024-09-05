@@ -34,6 +34,12 @@ export const theme: Theme = {
 			border: '1px solid lightgray',
 			borderRadius: '10px',
 		},
+		select: {
+			marginBottom: '10px',
+			border: '1px solid lightgray',
+			borderRadius: '10px',
+			backgroundColor: 'transparent'
+		},
 		launchButton: buttonProps,
 	},
 	buttons: {

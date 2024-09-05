@@ -43,7 +43,8 @@ export class Launchpad {
 	createContent(body: ICreateContentParams) {
 		return this.axios.post<IServerResponse<{
 			contentId: string,
-			collectionId: string,
+			royaltyCollectionId: number,
+			rentalCollectionId: number,
 			tusEndpoint: string,
 			uploadEndpoint: string
 		}>>('/api/content', body)
