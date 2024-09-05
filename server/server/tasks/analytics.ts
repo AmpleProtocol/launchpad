@@ -16,6 +16,8 @@ export default defineTask({
 		const timestamp = Date.now()
 
 		for (const content of contents) {
+			console.log(`Uploading analytics for ${content.title}`)
+
 			const lastAnalyticRes = await db.sql`
 				SELECT timestamp FROM analytics 
 				WHERE contentId = ${content.id} 
@@ -29,6 +31,8 @@ export default defineTask({
 
 			// 2. Retrieve analytics for each content from provider (livepeer)
 			const streams = await livepeer.retrieveViewcount(content.playbackId as string, fromDate)
+
+			console.log({ streams })
 
 			// 3. Upload analytics to treasury
 			await treasury.addAnalyticsData(content.id as string, streams, timestamp)

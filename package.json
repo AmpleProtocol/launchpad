@@ -1,0 +1,22 @@
+{
+	"name": "launchpad",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"build": "pnpm run -r build",
+		"build:core": "pnpm --filter @ample-launchpad/core build",
+		"build:client": "pnpm --filter @ample-launchpad/client build",
+		"build:server": "pnpm --filter @ample-launchpad/server build",
+		"build:ui": "pnpm --filter @ample-launchpad/ui build",
+		"dev": "pnpm --parallel --filter example --filter server dev",
+		"start:server": "pnpm --filter @ample-launchpad/server preview"
+	},
+	"private": true,
+	"workspaces": [
+		"client",
+		"core",
+		"server",
+		"ui",
+		"example"
+	]
+}

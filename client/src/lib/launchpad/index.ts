@@ -1,7 +1,9 @@
-import { IProvider, Series, Treasury } from '@ample-launchpad/core'
+import { Series, Treasury } from '@ample-launchpad/core'
 import axios, { Axios } from 'axios'
 import { IContent, ICreateContentParams, IGetJwtParams } from '../types/launchpad.types'
+import { Wallet } from '@near-wallet-selector/core'
 
+export type TimeRange = 'day' | 'week' | 'month' | 'year'
 export interface IContracts {
 	treasury: Treasury,
 	series: Series,
@@ -20,12 +22,19 @@ export class Launchpad {
 
 	constructor(
 		serverUrl: string,
+		public wallet: Wallet,
 		public contracts: IContracts,
-		public provider: IProvider,
 	) {
 		this.axios = axios.create({
 			baseURL: serverUrl,
 		})
+		// bound 'this' context for preventing context changing when deconstructing 
+		// methods
+		this.createContent = this.createContent.bind(this)
+		this.getJwt = this.getJwt.bind(this)
+		this.getContents = this.getContents.bind(this)
+		this.getContent = this.getContent.bind(this)
+		this.getAnalytics = this.getAnalytics.bind(this)
 	}
 
 	/**
@@ -47,23 +56,20 @@ export class Launchpad {
 		* publicKey.
 		* See https://github.com/near/NEPs/blob/master/neps/nep-0413.md for reference
 	*/
-	async getJwt({ contentId, accountId, payload }: IGetJwtParams): Promise<string> {
-		const res = await this.axios.post<IServerResponse<string>>('/api/sign-jwt', {
+	async getJwt({ contentId, payload }: IGetJwtParams) {
+		const accounts = await this.wallet.getAccounts()
+
+		return this.axios.post<IServerResponse<{ jwt: string, streamingUrl: string }>>('/api/sign-jwt', {
 			contentId,
-			accountId,
+			accountId: accounts[0].accountId,
 			payload
 		})
-		if (res.data.success && res.data.data) {
-			return res.data.data
-		}
-		throw new Error(res.data.message)
 	}
 
 	/**
 		* Returns all of the contents stored in server db
 	*/
 	getContents() {
-		// todo: add query params
 		return this.axios.get<IServerResponse<IContent[]>>('/api/content')
 	}
 
@@ -72,5 +78,13 @@ export class Launchpad {
 	*/
 	getContent(id: string) {
 		return this.axios.get<IServerResponse<IContent>>(`/api/content/${id}`)
+	}
+
+	getAnalytics(range: TimeRange, contentId: string) {
+		return this.axios.get<IServerResponse<{
+			totalGenerated: number,
+			streamsCount: number,
+			analytics: { streams: number, timestamp: number }[]
+		}>>(`/api/analytics?contentId=${contentId}&range=${range}`)
 	}
 }

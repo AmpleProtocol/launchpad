@@ -2,6 +2,7 @@
 	"name": "@ample-launchpad/ui",
 	"version": "0.0.1",
 	"description": "",
+	"type": "module",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
@@ -27,14 +28,25 @@
 	"homepage": "https://github.com/AmpleProtocol/launchpad#readme",
 	"devDependencies": {
 		"@types/node": "^20.11.30",
+		"@types/react": "^18.3.3",
+		"cpx": "^1.5.0",
 		"tsup": "^8.0.2",
 		"typescript": "^5.4.3"
 	},
 	"dependencies": {
-		"@ample-launchpad/client": "^0.0.3",
 		"@emotion/react": "^11.13.0",
-		"@types/react": "^18.3.3",
-		"react": "^18.3.1",
-		"theme-ui": "^0.16.2"
+		"@vidstack/react": "^1.12.9",
+		"hls.js": "^1.5.15",
+		"near-api-js": "^4.0.3",
+		"react-hook-form": "^7.52.2",
+		"recharts": "^2.12.7",
+		"theme-ui": "^0.16.2",
+		"tus-js-client": "^4.1.0"
+	},
+	"peerDependencies": {
+		"@ample-launchpad/client": "workspace:*",
+		"@ample-launchpad/core": "workspace:*",
+		"@near-wallet-selector/core": "^8.9.12",
+		"react": "^18"
 	}
 }

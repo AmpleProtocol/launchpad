@@ -1,14 +1,17 @@
-import { AmpleLaunchpadProvider, Launch } from '@ample-launchpad/ui'
-import { Launchpad, setupLaunchpad, } from '@ample-launchpad/client';
-import { LivepeerProvider } from '@ample-launchpad/core';
 import { useEffect, useState } from 'react';
+import { AmpleLaunchpadProvider } from '@ample-launchpad/ui'
+import { Launchpad, setupLaunchpad, } from '@ample-launchpad/client';
 import { setupWalletSelector, WalletSelector } from '@near-wallet-selector/core';
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
 import { setupModal, WalletSelectorModal } from '@near-wallet-selector/modal-ui';
+import { Content } from '@/components/Content';
+import SignIn from '@/components/SignIn';
+import { Networks } from '@ample-launchpad/core';
+import ModalContextProvider from '@/context/ModalContext';
 
 export default function Home() {
-	const [launchpad, setLaunchpad] = useState<Launchpad | null>(null)
 	const [selector, setSelector] = useState<WalletSelector | null>(null)
+	const [launchpad, setLaunchpad] = useState<Launchpad | null>(null)
 	const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
 	const [modal, setModal] = useState<WalletSelectorModal | null>(null)
 
@@ -32,9 +35,11 @@ export default function Home() {
 			]
 		})
 
+		const account = selector.store.getState().accounts[0]
+		if (account) setIsSignedIn(true)
+
 		const modal = setupModal(selector, {
-			// workaround this?
-			contractId: 'treasury.test.testnet'
+			contractId: ''
 		})
 
 		selector.on('signedIn', (_) => {
@@ -52,20 +57,16 @@ export default function Home() {
 	const initLaunchpad = async () => {
 		if (!selector) return
 
-		// get a provider
-		const provider = new LivepeerProvider({ apiKey: 'someapikey' })
-
 		// assert user is logged in
 		const wallet = await selector.wallet()
 
 		// setup launchpad
 		const launchpad = await setupLaunchpad({
-			network: 'testnet',
-			provider,
 			wallet,
-			serverUrl: 'https://localhost:5000',
-			treasuryAddress: 'treasury.test.testnet',
-			seriesAddress: 'series.test.testnet',
+			network: process.env.NEXT_PUBLIC_NEAR_NETWORK as Networks,
+			serverUrl: process.env.NEXT_PUBLIC_SERVER_URL as string,
+			treasuryAddress: process.env.NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS as string,
+			seriesAddress: process.env.NEXT_PUBLIC_SERIES_CONTRACT_ADDRESS as string,
 		})
 
 		setLaunchpad(launchpad)
@@ -74,11 +75,12 @@ export default function Home() {
 	return (
 		<>
 			{launchpad
-				? <AmpleLaunchpadProvider launchpad={launchpad}>
-					<h1>Hello world</h1>
-					<Launch />
+				? <AmpleLaunchpadProvider launchpad={launchpad} accentColor='#8e55fb'>
+					<ModalContextProvider>
+						<Content />
+					</ModalContextProvider>
 				</AmpleLaunchpadProvider>
-				: <button onClick={() => modal?.show()}>Connect Wallet</button>
+				: <SignIn modal={modal!} />
 			}
 		</>
 	);

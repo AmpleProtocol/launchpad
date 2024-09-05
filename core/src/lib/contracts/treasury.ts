@@ -29,7 +29,7 @@ export class Treasury extends Contract {
 		return this.call('add_analytics_data', {
 			bulk_analytics: {
 				content_id: contentId,
-				streams
+				streams: streams.toLocaleString('fullwide', { useGrouping: false })
 			},
 			timestamp
 		})

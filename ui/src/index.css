@@ -1,0 +1,13 @@
+@import '@vidstack/react/player/styles/default/theme.css';
+@import '@vidstack/react/player/styles/default/layouts/video.css';
+
+.royalty-item {
+	transition: transform 0.3s ease, margin-left 0.3s ease;
+}
+
+.royalty-item:hover {
+	color: black;
+	transform: scale(1.04);
+	margin-left: 14px;
+	transition: transform 0.3s ease, margin-left 0.3s ease;
+}

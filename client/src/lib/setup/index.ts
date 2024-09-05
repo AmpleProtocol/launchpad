@@ -1,6 +1,6 @@
-import { getSignerFromWalletSelector, IProvider, Networks, Series, Treasury } from "@ample-launchpad/core";
-import { IContracts, Launchpad } from "../launchpad";
+import { getSignerFromWalletSelector, Networks, Series, Treasury } from "@ample-launchpad/core";
 import { Wallet } from "@near-wallet-selector/core";
+import { IContracts, Launchpad } from "../launchpad";
 
 
 export interface ISetupProps {
@@ -12,10 +12,6 @@ export interface ISetupProps {
 		* @near-wallet-selector Wallet  
 	*/
 	wallet: Wallet,
-	/** 
-		* The desired Ample Launchpad provider 
-	*/
-	provider: IProvider,
 	/** 
 		* The url of the Ample Launchpad compliant server 
 	*/
@@ -36,7 +32,6 @@ export interface ISetupProps {
 export const setupLaunchpad = async ({
 	network,
 	wallet,
-	provider,
 	serverUrl,
 	treasuryAddress,
 	seriesAddress
@@ -44,10 +39,10 @@ export const setupLaunchpad = async ({
 
 	const signer = await getSignerFromWalletSelector({ network, wallet })
 
-	const contracs: IContracts = {
+	const contracts: IContracts = {
 		treasury: new Treasury(signer, treasuryAddress),
 		series: new Series(signer, seriesAddress),
 	}
 
-	return new Launchpad(serverUrl, contracs, provider)
+	return new Launchpad(serverUrl, wallet, contracts)
 }

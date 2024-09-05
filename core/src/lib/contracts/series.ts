@@ -1,5 +1,5 @@
 import { utils } from "near-api-js";
-import { Contract } from "./contract";
+import { Contract, THIRTY_TGAS } from "./contract";
 import { ISigner, JsonSerie, JsonToken, Royalty, TokenMetadata, TreasuryRoyalty } from "../types";
 
 interface ICreateSeriesParams {
@@ -57,12 +57,15 @@ export class Series extends Contract {
 	/** Mints a new NFT for the given serieId; must attach enough gas and deposit to cover NFT price */
 	async mint(serieId: number) {
 		const collection = await this.getSeriesDetails(serieId)
-		const deposit = utils.format.parseNearAmount(JSON.stringify(collection.price)) || undefined
+		const depositPlusStorage = Number(utils.format.formatNearAmount(collection.price))
+		const asString = (depositPlusStorage + 0.5).toFixed(2)
+		const deposit = utils.format.parseNearAmount(asString) || undefined
+		console.log({ collection, deposit, depositPlusStorage, asString })
 
 		return this.call('nft_mint', {
 			id: JSON.stringify(serieId),
 			receiver_id: this.signer.accountId
-		}, deposit)
+		}, THIRTY_TGAS, deposit)
 	}
 
 	/** Creates a new collection in the series contract, must be called by an approved creator */
@@ -75,6 +78,6 @@ export class Series extends Contract {
 			treasury_royalty: treasuryRoyalty,
 			price,
 			owner,
-		})
+		}, THIRTY_TGAS, '393000000000000000000000')
 	}
 }

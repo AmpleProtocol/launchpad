@@ -1,8 +1,8 @@
-import { FinalExecutionOutcome } from '@near-wallet-selector/core';
+import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 import { ISigner } from '../types';
 
-const THIRTY_TGAS = '30000000000000';
-const NO_DEPOSIT = '0';
+export const THIRTY_TGAS = '30000000000000';
+export const NO_DEPOSIT = '0';
 
 /** Base contract class, inteded to be inherited and extended */
 export class Contract {
@@ -24,7 +24,7 @@ export class Contract {
 	}
 
 	/** Makes a function call with gas and deposit */
-	protected call<T>(method: string, args: any, gas = THIRTY_TGAS, deposit = NO_DEPOSIT): Promise<T | void | FinalExecutionOutcome> {
+	protected call(method: string, args: any, gas = THIRTY_TGAS, deposit = NO_DEPOSIT): Promise<void | FinalExecutionOutcome> {
 		return this.signer.call({
 			contractId: this.address,
 			method,

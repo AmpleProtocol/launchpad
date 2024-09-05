@@ -14,7 +14,6 @@ export default defineConfig({
 		})
 	],
 	esbuildOptions(options, context) {
-		// https://esbuild.github.io/api/#external
-		options.packages = 'external'
+		options.external = ['']
 	}
 })

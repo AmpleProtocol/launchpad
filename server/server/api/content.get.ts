@@ -2,6 +2,9 @@ interface IQuery {
 	limit?: number
 }
 
+/**
+	* Retrieves a content
+*/
 export default eventHandler(async event => {
 	const db = useDatabase()
 	const query = getQuery<IQuery>(event)

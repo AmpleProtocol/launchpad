@@ -10,7 +10,7 @@ interface IBody {
 	description: string,
 	mediaUrl: string,
 	totalSupply: number,
-	royalty: Royalty,
+	royalty?: Royalty,
 	treasuryRoyalty: TreasuryRoyalty
 }
 
@@ -42,29 +42,34 @@ export default eventHandler(async event => {
 		title,
 		description,
 		media: mediaUrl,
-		copies: totalSupply.toString(),
+		copies: totalSupply,
 	}
 	await series.createSeries({
 		id: collectionId,
 		contentId,
 		metadata,
-		royalty,
+		royalty: royalty || null,
 		treasuryRoyalty,
 		price,
 		owner
 	})
+	console.log('Done creating collection to series contract')
+	console.log({ metadata })
 
 	// 3. create provider asset (won't upload the content)
 	const { assetId, playbackId, tusEndpoint, uploadEndpoint } = await livepeer.createAsset(title)
+	console.log(`Done creating livepeer asset`)
+	console.log({ assetId, tusEndpoint, playbackId })
 
 	// 4. create db record
 	await db.sql`INSERT INTO contents VALUES (
 		${contentId},
 		${title},
 		${collectionId},
-		${assetId},
 		${playbackId},
+		${assetId}
 	)`;
+	console.log(`Done adding to db`)
 
 	// 5. return the tusUrl for user to upload the actual file
 	return {

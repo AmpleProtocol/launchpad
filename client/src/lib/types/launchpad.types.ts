@@ -7,7 +7,7 @@ export interface ICreateContentParams {
 	description: string,
 	mediaUrl: string,
 	totalSupply: number,
-	royalty: Royalty,
+	royalty?: Royalty,
 	treasuryRoyalty: TreasuryRoyalty
 }
 
@@ -22,7 +22,6 @@ export interface IPayload {
 
 export interface IGetJwtParams {
 	contentId: string,
-	accountId: string,
 	payload: IPayload
 }
 
