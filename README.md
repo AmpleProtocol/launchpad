@@ -2,7 +2,7 @@
 Plug-and-play components to deploy and tokenize media + IP anywhere.
 
 ## Overview 
-The ample launchpad is a set of tools that facilitate the tokenization of IP assets such as films and music. It is designed to work with the [NEAR](https://near.org) ecosystem and ships a [Livepeer](https://livepeer.org) provider (although is not limited to it).
+The ample launchpad is a suit of tools that facilitate the tokenization of IP assets such as films and music. It is designed to work with the [NEAR](https://near.org) ecosystem and ships a [Livepeer](https://livepeer.org) provider (although is not limited to it).
 Consists of three npm packages, a set of two NEAR smart contracts and a containerized server. 
 
 ## Getting Started
@@ -24,9 +24,11 @@ npm install \
 // Please setup wallet selector before using these packages.
 // see example/ for a complete @near-wallet-selector + @ample-launchpad integration
 import { useState, useEffect } from 'react'
+import { walletSelector } from 'your-wallet-selector-setup'
 import { Launchpad, setupLaunchpad } from '@ample-launchpad/client'
 import { AmpleLaunchpadProvider } from '@ample-launchpad/ui'
-import { walletSelector } from 'your-wallet-selector-setup'
+import "@ample-launchpad/ui/dist/index.css"
+
 
 const ExampleApp = () => {
     const [launchpad, setLaunchpad] = useState<Launchpad | undefined>()
@@ -67,6 +69,7 @@ const ExampleApp = () => {
 The `@ample-launchpad/ui` package ships a `useLaunchpad` hook to interact with both server and contracts instances.
 ```typescript
 import { useLaunchpad } from '@ample-launchpad/ui'
+import { IContent } from '@ample-launchpad/client'
 
 const SomeComponent = () => {
     const { getContents } = useLaunchpad()

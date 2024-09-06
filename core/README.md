@@ -1,6 +1,5 @@
 # Ample Launchpad | Core Package
 Core functionality for the launchpad
-(Work in progress...)
 
 ## Usage
 1. Install the package
