@@ -44,8 +44,8 @@ export default eventHandler(async event => {
 	// get collection and issued tokens for this content
 	const rangeInMs = RangeInDays[range] * DAY_IN_MS
 	const royaltyCollection = await series.getSeriesDetails(content.royaltyCollectionId)
-	const rentalCollection = await series.getSeriesDetails(content.royaltyCollectionId)
-	const issuedRoyaltyTokens = await series.tokensByTimeRange(rangeInMs, content.rentalCollectionId)
+	const rentalCollection = await series.getSeriesDetails(content.rentalCollectionId)
+	const issuedRoyaltyTokens = await series.tokensByTimeRange(rangeInMs, content.royaltyCollectionId)
 	const issuedRentalTokens = await series.tokensByTimeRange(rangeInMs, content.rentalCollectionId)
 
 	// total generated in the given range = tokenPrice * issuedTokens
