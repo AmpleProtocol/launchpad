@@ -1,4 +1,6 @@
 # Ample Protocol Treasury
+A [NEAR](https://near.org) treasury and royalty managment smart contract. This is meant to work with the [series](../series/README.md) smart contract
+
 ## Quickstart
 1. Install near cli and login 
 ```sh 
@@ -24,13 +26,7 @@ near login --networkId mainnet
 ./contract_init.sh series.contract.near 
 ```
 
-5. Add contents using 
-```sh
-# You may want to modify the uploaded content 
-./add_content.sh
-```
-
-6. (optional) Add allowed accounts
+5. (optional) Add allowed accounts
 You can add allowed accounts to give them permission to modify the treasury contract
 ```sh 
 souce ./.env && near call $CONTRACT_NAME add_allowed_account '{"account_id": "someaccount.near"}' --accountId $ACCOUNT_ID

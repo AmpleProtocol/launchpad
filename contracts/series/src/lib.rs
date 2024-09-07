@@ -44,6 +44,7 @@ pub struct Series {
     price: Option<Balance>,
     owner_id: AccountId,
     content_id: String,
+    valid_period: Option<u64>,
 }
 
 pub type SeriesId = u64;

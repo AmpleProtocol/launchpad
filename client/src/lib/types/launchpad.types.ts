@@ -1,14 +1,23 @@
 import { Royalty, TreasuryRoyalty } from "@ample-launchpad/core";
 
+interface IRentalCollection {
+	price: string,
+	royalty?: Royalty,
+	validPeriodMs: number
+}
+
+interface IRoyaltyCollection extends Omit<IRentalCollection, 'validPeriodMs'> {
+	totalSupply: number,
+	treasuryRoyalty: TreasuryRoyalty
+}
+
 export interface ICreateContentParams {
 	owner: string,
-	price: string,
 	title: string,
 	description: string,
 	mediaUrl: string,
-	totalSupply: number,
-	royalty?: Royalty,
-	treasuryRoyalty: TreasuryRoyalty
+	royaltyCollection: IRoyaltyCollection,
+	rentalCollection: IRentalCollection
 }
 
 export interface IPayload {
@@ -28,7 +37,9 @@ export interface IGetJwtParams {
 export interface IContent {
 	id: string,
 	title: string,
-	collectionId: number,
+	media: string,
+	royaltyCollectionId: number,
+	rentalCollectionId: number,
 	playbackId: string,
 	assetId: string
 }

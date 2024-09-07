@@ -1,19 +1,17 @@
 # Ample Launchpad | Client Package
 Main component for direct manipulation of a launchpad deployment.
-(Work in progress...)
 
 ## Quickstart
-This guide assumes you have already deployed a [server](../server/README.md) and the Ample Contracts ([Treasury](https://github.com/AmpleProtocol/treasury), [Series](https://github.com/AmpleProtocol/nft-series)).
+This guide assumes you have already deployed a [server](../server/README.md) and the NEAR [contracts](../contracts/README.md)
 
 ### Install dependencies
 ```sh 
-yarn add @ample-launchpad/core @ample-launchpad/client
+npm install @ample-launchpad/core @ample-launchpad/client
 ```
 
 ### Setup
 ```typescript
 import { setupLaunchpad } from '@ample-launchpad/client'
-import { LivepeerProvider } from '@ample-launchpad/core'
 // from @near-wallet-selector
 import { setupWalletSelector } from "@near-wallet-selector/core";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
@@ -28,16 +26,10 @@ const init = async () => {
     if(!selector.isSignedIn()) throw new Error('User must be signed in in order to setup the launchpad')
     const wallet = await selector.wallet();
 
-    // get a launchpad provider
-    const provider = new LivepeerProvider({
-        apiKey: process.env.LIVEPEER_API_KEY,
-    })
-
     // get the actual launchpad instance
     const launchpad = await setupLaunchpad({
         network: 'testnet',
         wallet,
-        provider,
         serverUrl: process.env.SERVER_URL,
         treasuryAddress: process.env.TREASURY_ADDRESS,
         seriesAddress: process.env.SERIES_ADDRESS
@@ -59,7 +51,4 @@ await launchpad.contracts.treasury.claimRoyalties(/* contentId */)
 const serieDetails = await launchpad.contracts.series.getSeriesDetails(/* serieId */)
 const ownedNftSeries = await launchpad.contracts.series.nftSeriesForOwner()
 await launchpad.contracts.series.mint(/* serieId */)
-
-// provider 
-const streamingUrl = launchpad.provider.getStreamingUrl(/* playbackId, jwt */)
 ```

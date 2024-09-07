@@ -43,12 +43,15 @@ export default eventHandler(async event => {
 	// 1. CALCULATE TOTAL GENERATED
 	// get collection and issued tokens for this content
 	const rangeInMs = RangeInDays[range] * DAY_IN_MS
-	const collection = await series.getSeriesDetails(content.collectionId)
-	const issuedTokens = await series.tokensByTimeRange(rangeInMs, content.collectionId)
+	const royaltyCollection = await series.getSeriesDetails(content.royaltyCollectionId)
+	const rentalCollection = await series.getSeriesDetails(content.rentalCollectionId)
+	const issuedRoyaltyTokens = await series.tokensByTimeRange(rangeInMs, content.royaltyCollectionId)
+	const issuedRentalTokens = await series.tokensByTimeRange(rangeInMs, content.rentalCollectionId)
 
 	// total generated in the given range = tokenPrice * issuedTokens
-	const priceAsNear = Number(utils.format.formatNearAmount(collection.price))
-	const totalGenerated = priceAsNear * issuedTokens
+	const royaltyPrice = Number(utils.format.formatNearAmount(royaltyCollection.price))
+	const rentalPrice = Number(utils.format.formatNearAmount(rentalCollection.price))
+	const totalGenerated = (royaltyPrice * issuedRoyaltyTokens) + (rentalPrice * issuedRentalTokens)
 
 	// 2. GET ANALYTICS
 	const now = Date.now()

@@ -13,7 +13,9 @@ export default defineNitroPlugin(async () => {
 	await db.sql`CREATE TABLE IF NOT EXISTS contents (
 		id TEXT PRIMARY KEY, 
 		title TEXT, 
-		collectionId INT, 
+		media TEXT,
+		royaltyCollectionId INT, 
+		rentalCollectionId INT, 
 		playbackId TEXT,
 		assetId TEXT
 	)`;

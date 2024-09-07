@@ -1,15 +1,7 @@
-# Ample Launchpad 
-Plug-and-play components to deploy and tokenize media + IP anywhere.
+# Ample Launchpad | UI Package
+A set of React components and utils to launch and tokenize IP + media anywhere.
 
-## Overview 
-The ample launchpad is a suit of tools that facilitate the tokenization of IP assets such as films and music. It is designed to work with the [NEAR](https://near.org) ecosystem and ships a [Livepeer](https://livepeer.org) provider (although is not limited to it).
-Consists of three npm packages, a set of two NEAR smart contracts and a containerized server. 
-
-## Getting Started
-### Prerequisites 
-- Deploy the [launchpad contracts](./contracts/README.md) 
-- Deploy a [server](./server/README.md) instance 
-
+## Quick start
 ### Install dependencies
 ```sh 
 npm install \
@@ -105,3 +97,6 @@ const SomeOtherComponent = () => {
 	/>
 }
 ```
+
+
+

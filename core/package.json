@@ -1,7 +1,7 @@
 {
 	"name": "@ample-launchpad/core",
-	"version": "0.0.7",
-	"description": "",
+	"version": "0.1.0",
+	"description": "Core functionality for the launchpad",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
