@@ -45,7 +45,7 @@ export default function ContentsList() {
 	</div>
 
 	return <div>
-		<div style={{ display: 'flex' }}>
+		<div style={{ display: 'flex', flexWrap: 'wrap' }}>
 			{contents.map((content, index) => <ContentListItem
 				owned={ownedRoyalty.includes(content.royaltyCollectionId)}
 				content={content}
