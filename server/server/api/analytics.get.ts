@@ -48,10 +48,11 @@ export default eventHandler(async event => {
 	const issuedRoyaltyTokens = await series.tokensByTimeRange(rangeInMs, content.royaltyCollectionId)
 	const issuedRentalTokens = await series.tokensByTimeRange(rangeInMs, content.rentalCollectionId)
 
-	// total generated in the given range = tokenPrice * issuedTokens
 	const royaltyPrice = Number(utils.format.formatNearAmount(royaltyCollection.price))
 	const rentalPrice = Number(utils.format.formatNearAmount(rentalCollection.price))
-	const totalGenerated = (royaltyPrice * issuedRoyaltyTokens) + (rentalPrice * issuedRentalTokens)
+	const rentalGenerated = rentalPrice * issuedRentalTokens
+	const royaltyGenerated = royaltyPrice * issuedRoyaltyTokens
+	const totalGenerated = rentalGenerated + royaltyGenerated
 
 	// 2. GET ANALYTICS
 	const now = Date.now()
@@ -68,6 +69,8 @@ export default eventHandler(async event => {
 		success: true,
 		data: {
 			totalGenerated,
+			royaltyGenerated,
+			rentalGenerated,
 			streamsCount,
 			analytics: streamsAnalytics
 		}

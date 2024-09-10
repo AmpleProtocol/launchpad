@@ -84,6 +84,8 @@ export class Launchpad {
 	getAnalytics(range: TimeRange, contentId: string) {
 		return this.axios.get<IServerResponse<{
 			totalGenerated: number,
+			rentalGenerated: number,
+			royaltyGenerated: number,
 			streamsCount: number,
 			analytics: { streams: number, timestamp: number }[]
 		}>>(`/api/analytics?contentId=${contentId}&range=${range}`)
