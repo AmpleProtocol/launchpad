@@ -54,7 +54,7 @@ export const theme: Theme = {
 	layout: {
 		container: {
 			padding: '10px'
-		}
+		},
 	},
 	images: {
 		nftPreview: {
@@ -63,5 +63,5 @@ export const theme: Theme = {
 			margin: '0 auto',
 			maxHeight: '500px'
 		}
-	}
+	},
 } 

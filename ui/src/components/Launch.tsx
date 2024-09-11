@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./lib/ErrorMessage";
 import { ICreateContentParams } from "@ample-launchpad/client";
 import { useEffect, useMemo, useState } from "react";
-import { Upload } from "tus-js-client";
+import { DetailedError, Upload } from "tus-js-client";
 import { utils } from "near-api-js";
 
 const ONE_DAY_MS = 86400000
@@ -29,10 +29,11 @@ interface ICreateContentResponse {
 
 interface ILaunchProps extends BoxProps {
 	onContentCreated?: (newContent: ICreateContentResponse) => any,
+	onUploadError?: (error: Error | DetailedError) => any,
 	onUploadProgress?: (progress: number) => any
 }
 
-export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgress, ...props }) => {
+export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadError, onUploadProgress, ...props }) => {
 	const { createContent, wallet } = useLaunchpad()
 	const { handleSubmit, register, setValue, setError, watch, reset, formState: { errors } } = useForm<IFormData>({
 		defaultValues: {
@@ -120,8 +121,8 @@ export const Launch: React.FC<ILaunchProps> = ({ onContentCreated, onUploadProgr
 					filetype: file.type,
 				},
 				onError: (error) => {
-					alert(`Upload failed\n${error}`)
-					console.error(error)
+					if (!onUploadError) throw error
+					onUploadError(error)
 				},
 				onProgress: (bytesUploaded, bytesTotal) => {
 					const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
