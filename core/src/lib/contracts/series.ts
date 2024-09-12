@@ -59,7 +59,7 @@ export class Series extends Contract {
 	async mint(serieId: number) {
 		const collection = await this.getSeriesDetails(serieId)
 		const depositPlusStorage = Number(utils.format.formatNearAmount(collection.price))
-		const asString = (depositPlusStorage + 0.5).toFixed(2)
+		const asString = (depositPlusStorage + 0.1).toFixed(2)
 		const deposit = utils.format.parseNearAmount(asString) || undefined
 		console.log({ collection, deposit, depositPlusStorage, asString })
 
