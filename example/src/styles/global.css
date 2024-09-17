@@ -154,11 +154,14 @@ div.card {
 	align-items: flex-start;
 }
 
-.modal-content div.player {
-	height: 90%;
+.modal-content video {
+	margin: auto;
+	width: 80%;
+}
+
+div.player div {
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	height: 100%;
 }
 
 .modal-content h1 {

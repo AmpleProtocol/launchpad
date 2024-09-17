@@ -12,6 +12,7 @@
     "@ample-launchpad/client": "workspace:*",
     "@ample-launchpad/core": "workspace:*",
     "@ample-launchpad/ui": "workspace:*",
+    "@livepeer/react": "^4.2.7",
     "@near-wallet-selector/core": "^8.9.12",
     "@near-wallet-selector/modal-ui": "^8.9.12",
     "@near-wallet-selector/my-near-wallet": "^8.9.12",

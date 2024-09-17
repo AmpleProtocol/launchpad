@@ -11,6 +11,7 @@ interface ISignMessageParamsLocalStorage extends Omit<SignMessageParams, 'nonce'
 }
 interface IUrlData {
 	url: string,
+	jwt: string,
 	expires: number
 }
 
@@ -31,6 +32,7 @@ const constructPayload = (
 export const useStreaming = (contentId: string) => {
 	const { getJwt, wallet } = useLaunchpad()
 	const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
+	const [jwt, setJwt] = useState<string | null>(null)
 	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
@@ -57,14 +59,16 @@ export const useStreaming = (contentId: string) => {
 
 			if (!res.data.success) throw new Error(res.data.message)
 
-			const { streamingUrl: _url } = res.data.data!
+			const { streamingUrl: _url, jwt } = res.data.data!
 
 			const urlData: IUrlData = {
 				url: _url,
+				jwt,
 				expires: Date.now() + ONE_DAY_MS // todo: receive expiration time from server
 			}
 			localStorage.setItem(`ample::streaming-url-${contentId}`, JSON.stringify(urlData))
 			setStreamingUrl(_url)
+			setJwt(jwt)
 
 			// replace url 
 			const url = new URL(location.href);
@@ -107,6 +111,7 @@ export const useStreaming = (contentId: string) => {
 
 		// update state
 		setStreamingUrl(urlData.url)
+		setJwt(urlData.jwt)
 		return true
 	}
 
@@ -170,6 +175,7 @@ export const useStreaming = (contentId: string) => {
 
 	return {
 		streamingUrl,
+		jwt,
 		error,
 		tryAgain
 	}

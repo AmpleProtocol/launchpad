@@ -1,5 +1,5 @@
 import { IContent } from "@ample-launchpad/client"
-import { Player } from "@ample-launchpad/ui"
+import { Player } from "./Player"
 
 interface IProps {
 	content: IContent,
