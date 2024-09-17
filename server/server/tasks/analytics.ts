@@ -31,18 +31,23 @@ export default defineTask({
 
 			// 2. Retrieve analytics for each content from provider (livepeer)
 			const streams = await livepeer.retrieveViewcount(content.playbackId as string, fromDate)
-
 			console.log({ streams })
 
-			// 3. Upload analytics to treasury
-			await treasury.addAnalyticsData(content.id as string, streams, timestamp)
-
+			// create a record in db, no matter how many streams there are
 			await db.sql`INSERT INTO analytics VALUES (
 				${nanoid()}, 
 				${timestamp},
 				${streams},
 				${content.id}
 			)`
+
+			// if no streams, don't send anything to treasury 
+			if (streams == 0) continue
+
+			// 3. Upload analytics to treasury
+			await treasury.addAnalyticsData(content.id as string, streams, timestamp)
+
+			console.log('Added to treasury')
 		}
 
 		return { result: true }

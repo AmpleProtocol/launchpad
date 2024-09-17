@@ -48,13 +48,12 @@ export const RoyaltyDashboard: React.FC<IRoyaltyDashboardProps> = ({ collection 
 	const fetchRoyalties = async () => {
 		const _royalties = await contracts.treasury.calculateRoyalties(collection.content_id)
 
-		setRoyalties(_royalties.toFixed(2))
+		setRoyalties(_royalties.toFixed(10))
 	}
 
 	const analyticsAvailable = useMemo<boolean>(() => {
 		if (!analytics) return false
 		if (analytics.analytics.length == 0) return false
-		if (analytics.analytics[0].streams == 0) return false
 		return true
 	}, [analytics])
 

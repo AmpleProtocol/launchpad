@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import { CartesianGrid, Legend, Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { CartesianGrid, Legend, Area, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Line } from "recharts"
 import { IAnalytic } from "../../types/analytic.type";
+import { theme } from "../../theme";
 
 interface IChartData {
 	date: string,
@@ -17,10 +18,8 @@ export default function AnalyticsChart({ analytics }: IAnalyticsChartProps) {
 		streams: analytic.streams
 	})), [analytics])
 
-	return <ResponsiveContainer width="100%" height="100%">
-		<AreaChart
-			width={500}
-			height={300}
+	return <ResponsiveContainer width='100%' height={400}>
+		<LineChart
 			data={data}
 			margin={{
 				top: 5,
@@ -34,8 +33,8 @@ export default function AnalyticsChart({ analytics }: IAnalyticsChartProps) {
 			<YAxis />
 			<Tooltip />
 			<Legend />
-			{/* <Line type="monotone" dataKey="streams" stroke="#8884d8" /> */}
-			<Area type="monotone" dataKey="streams" stroke="#8884d8" fill="#8884d8" />
-		</AreaChart>
+			<Line type="monotone" dataKey="streams" stroke={theme.colors?.primary?.toString()} />
+			{/* <Area type="monotone" dataKey="streams" stroke="#8884d8" fill="#8884d8" /> */}
+		</LineChart>
 	</ResponsiveContainer>
 }
