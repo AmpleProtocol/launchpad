@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { JsonSerie } from "@ample-launchpad/core"
 import { TimeRange } from "@ample-launchpad/client"
 import { Box, Button, Card, Flex, Grid, Image, Text } from "theme-ui"
-import { useLaunchpad } from "../../context"
+import { useLaunchpad } from "../../hooks"
 import AnalyticsChart from "./AnalyticsChart"
 import { IAnalytic } from "../../types/analytic.type"
 

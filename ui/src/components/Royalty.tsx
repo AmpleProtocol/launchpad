@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLaunchpad } from "../context"
+import { useLaunchpad } from "../hooks"
 import { Box, Grid, GridProps } from "theme-ui"
 import { RoyaltyListItem } from "./lib/RoyaltyListItem"
 import { RoyaltyDashboard } from "./lib/RoyaltyDashboard"

@@ -1,11 +1,11 @@
 import { Box, BoxProps, Container, Flex, Grid, Image, Input, Label, Progress, Text } from "theme-ui"
-import { useLaunchpad } from "../context"
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from "./lib/ErrorMessage";
 import { ICreateContentParams } from "@ample-launchpad/client";
 import { useEffect, useMemo, useState } from "react";
 import { DetailedError, Upload } from "tus-js-client";
 import { utils } from "near-api-js";
+import { useLaunchpad } from "../hooks";
 
 const ONE_DAY_MS = 86400000
 

@@ -1,7 +1,7 @@
 import { Box, Button, Spinner } from "theme-ui";
 import { MediaPlayer, MediaProvider } from '@vidstack/react';
 import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
-import { useStreaming } from "../hooks/useStreaming";
+import { useStreaming } from "../hooks";
 
 interface IPlayerProps {
 	contentId: string,

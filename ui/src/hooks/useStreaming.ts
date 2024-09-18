@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLaunchpad } from "../context"
+import { useLaunchpad } from "."
 import { IPayload } from "@ample-launchpad/client"
 import { type SignedMessage, type SignMessageParams } from "@near-wallet-selector/core";
 
