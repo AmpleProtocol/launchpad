@@ -18,7 +18,7 @@ export const Player: React.FC<IProps> = ({ contentId, title }) => {
 
 	return <LPlayer.Root aspectRatio={null} autoPlay src={getSrc(streamingUrl)} jwt={jwt}>
 		<LPlayer.Container>
-			<LPlayer.Video controls title={title} />
+			<LPlayer.Video controls title={title} muted />
 		</LPlayer.Container>
 	</LPlayer.Root>
 }
