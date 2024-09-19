@@ -7,8 +7,8 @@ Consists of three npm packages, a set of two NEAR smart contracts and a containe
 
 ## Getting Started
 ### Prerequisites 
-- Deploy the [launchpad contracts](./contracts/README.md) 
-- Deploy a [server](./server/README.md) instance 
+- Deploy the [launchpad contracts](https://github.com/AmpleProtocol/launchpad/tree/master/contracts) 
+- Deploy a [server](https://github.com/AmpleProtocol/launchpad/tree/master/server) instance 
 
 ### Install dependencies
 ```sh 
@@ -19,10 +19,10 @@ npm install \
 ```
 
 ### Init launchpad 
+> @ample-launchpad/ui and @ample-launchpad/client packages are intended to be used in tandem with @near-wallet-selector.
+> Please setup wallet selector before using these packages.
+> see [example/](https://github.com/AmpleProtocol/launchpad/tree/master/example) for a complete @near-wallet-selector + @ample-launchpad integration
 ```typescript 
-// @ample-launchpad/ui and @ample-launchpad/client packages are intended to be used in tandem with @near-wallet-selector.
-// Please setup wallet selector before using these packages.
-// see example/ for a complete @near-wallet-selector + @ample-launchpad integration
 import { useState, useEffect } from 'react'
 import { walletSelector } from 'your-wallet-selector-setup'
 import { Launchpad, setupLaunchpad } from '@ample-launchpad/client'
@@ -101,7 +101,12 @@ import { Launch } from "@ample-launchpad/ui"
 const SomeOtherComponent = () => {
 	return <Launch
 		onUploadProgress={(progress) => { console.log({ progress }) }}
+		onUploadError={(error) => { console.error(error) }}
 		onContentCreated={({ collectionId, contentId }) => { console.log({ collectionId, contentId }) }}
 	/>
 }
 ```
+> Please refer to the [UI package](https://github.com/AmpleProtocol/launchpad/tree/master/ui) for more information about these components.
+
+## Contributing
+Check our [contribution guidelines](https://github.com/AmpleProtocol/launchpad/tree/master/CONTRIBUTING.md) to learn how you can start contributing to the Ample Launchpad.
