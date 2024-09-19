@@ -143,6 +143,7 @@ const AnotherOne = () => {
 ```
 
 #### `<Player />`
+> This player component handles only the tokengated side of the streaming process. It is not yet capable of sending metrics to the chosen provider. For integrating a custom player with a per-provider metrics system, please see the [useStreaming](#usestreaming) hook.
 ```typescript 
 import { Player } from "@ample-launchpad/ui"
 
