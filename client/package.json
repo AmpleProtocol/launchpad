@@ -1,6 +1,6 @@
 {
 	"name": "@ample-launchpad/client",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Main component for direct manipulation of a launchpad deployment.",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",

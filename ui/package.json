@@ -1,6 +1,6 @@
 {
 	"name": "@ample-launchpad/ui",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "A set of React components and utils to launch and tokenize IP + media anywhere.",
 	"type": "module",
 	"main": "dist/index.js",
