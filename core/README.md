@@ -1,6 +1,8 @@
 # Ample Launchpad | Core Package
 Core functionality for the launchpad
 
+> For an Ample Launchpad base integration, please check [the UI package](https://github.com/AmpleProtocol/launchpad/tree/master/ui).
+
 ## Usage
 1. Install the package
 ```sh
