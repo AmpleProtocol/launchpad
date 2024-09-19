@@ -57,8 +57,9 @@ const ExampleApp = () => {
 }
 ```
 
-### Hook
-The `@ample-launchpad/ui` package ships a `useLaunchpad` hook to interact with both server and contracts instances.
+### Hooks
+#### useLaunchpad
+This is the main hook to interact with the launchpad, it allows you to access the `Launchpad` instance created during setup.
 ```typescript
 import { useLaunchpad } from '@ample-launchpad/ui'
 import { IContent } from '@ample-launchpad/client'
@@ -85,18 +86,70 @@ const SomeComponent = () => {
 }
 ```
 
+#### useStreaming
+This hook will take care of the tokengated streaming process by asking the user for a signature to validate wallet ownership, get a jwt with that signature and store the access token for each content in local storage.
+
+Here is an example of how to use the `useStreaming` hook along with the Livepeer player component:
+> The following setup is needed to get [Livepeer](https://livepeer.org) metrics working properly. See https://docs.livepeer.org/developers/guides/get-engagement-analytics-via-api#registering-views for more information
+```typescript
+import { useStreaming } from "@ample-launchpad/ui"
+import { getSrc } from "@livepeer/react/external";
+import * as LivepeerPlayer from "@livepeer/react/player";
+
+interface IProps {
+	contentId: string,
+	title: string
+}
+export const CustomPlayer: React.FC<IProps> = ({ contentId, title }) => {
+	const { error, streamingUrl, jwt, tryAgain } = useStreaming(contentId)
+
+	if (!streamingUrl) return null
+
+	if (error) return <div>
+		<pre>{error}</pre>
+		<button onClick={tryAgain}>Try again</button>
+	</div>
+
+	return <LivepeerPlayer.Root aspectRatio={null} autoPlay src={getSrc(streamingUrl)} jwt={jwt}>
+		<LivepeerPlayer.Container>
+			<LivepeerPlayer.Video controls title={title} muted />
+		</LivepeerPlayer.Container>
+	</LivepeerPlayer.Root>
+}
+
+```
+
 ### React components
-Three ready-to-go react components are also provided by `@ample-launchpad/ui`, `<Launch/>`, `<Royalty/>` and `<Player/>`.
+#### `<Launch />`
 ```typescript 
 import { Launch } from "@ample-launchpad/ui"
 
 const SomeOtherComponent = () => {
 	return <Launch
+        onUploadError={(error) => console.error(error)}
 		onUploadProgress={(progress) => { console.log({ progress }) }}
 		onContentCreated={({ collectionId, contentId }) => { console.log({ collectionId, contentId }) }}
 	/>
 }
 ```
 
+#### `<Royalty />`
+```typescript
+import { Royalty } from "@ample-launchpad/ui"
 
+const AnotherOne = () => {
+    return <Royalty />
+}
+```
 
+#### `<Player />`
+```typescript 
+import { Player } from "@ample-launchpad/ui"
+
+const contentId = 'some-content-id'
+const title = 'Shrek'
+
+const LastFakeComponent = () => {
+    return <Player contentId={contentId} title={title} />
+}
+```
