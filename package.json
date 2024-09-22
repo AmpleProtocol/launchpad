@@ -9,7 +9,11 @@
 		"build:server": "pnpm --filter @ample-launchpad/server build",
 		"build:ui": "pnpm --filter @ample-launchpad/ui build",
 		"dev": "pnpm --parallel --filter example --filter server dev",
-		"start:server": "pnpm --filter @ample-launchpad/server preview"
+		"start:server": "pnpm --filter @ample-launchpad/server preview",
+		"podman:login": "podman login docker.io",
+		"podman:build": "podman build -t ample-launchpad/server:latest .",
+		"podman:tag": "podman tag ample-launchpad/server docker.io/menurivera/ample-launchpad-server",
+		"podman:publish": "podman push docker.io/menurivera/ample-launchpad-server"
 	},
 	"private": true,
 	"workspaces": [
