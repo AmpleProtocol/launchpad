@@ -152,7 +152,7 @@ interface Response {
 ```
 
 ### POST /api/sig-jwt
-This endpoint will ask for a payload to validate a given signature, if it is valid, then it will issue a `jwt` for streaming tokengated contents. See [NEP-0413](https://github.com/near/NEPs/blob/master/neps/nep-0413.md) for reference
+This endpoint will expect a payload to validate a given signature, if it is valid, then it will issue a `jwt` for streaming tokengated contents. See [NEP-0413](https://github.com/near/NEPs/blob/master/neps/nep-0413.md) for reference
 #### Body 
 ```typescript
 interface Body {
