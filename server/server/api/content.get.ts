@@ -1,7 +1,3 @@
-interface IQuery {
-	limit?: number
-}
-
 /**
 	* Retrieves a content
 */

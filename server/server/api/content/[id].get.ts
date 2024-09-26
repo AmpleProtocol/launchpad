@@ -9,8 +9,13 @@ export default eventHandler(async event => {
 		return { success: false, message: res.error }
 	}
 
+	if (res.rows.length === 0) {
+		setResponseStatus(event, 404)
+		return { sucecss: false, message: 'Not found' }
+	}
+
 	return {
 		success: true,
-		data: res.rows
+		data: res.rows[0]
 	}
 })
