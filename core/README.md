@@ -38,7 +38,7 @@ const network =  process.env.NEAR_NETWORK;
 const selector = await setupWalletSelector({
     network,
     modules: [
-        setupWalletSelector()
+        setupMyNearWallet()
     ]
 })
 

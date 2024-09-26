@@ -15,7 +15,7 @@ export class Contract {
 	}
 
 	/** Makes a view function call to the contract */
-	protected view<T>(method: string, args: any): Promise<T> {
+	view<T>(method: string, args: any): Promise<T> {
 		return this.signer.view({
 			contractId: this.address,
 			method,
@@ -24,7 +24,7 @@ export class Contract {
 	}
 
 	/** Makes a function call with gas and deposit */
-	protected call(method: string, args: any, gas = THIRTY_TGAS, deposit = NO_DEPOSIT): Promise<void | FinalExecutionOutcome> {
+	call(method: string, args: any, gas = THIRTY_TGAS, deposit = NO_DEPOSIT): Promise<void | FinalExecutionOutcome> {
 		return this.signer.call({
 			contractId: this.address,
 			method,
