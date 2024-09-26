@@ -1,0 +1,2 @@
+export const ACCOUNT_ID = 'mockamplelaunchpad.testnet'
+export const PRIVATE_KEY = 'ed25519:p1fKBrKu5uqkUmDXt8wENCqNKSNMg5jYEz5K7f6YRy9Tt1k7aLmFDKtaoFmFJBWdVppqPVDhg83DjZJUKfxat35'
