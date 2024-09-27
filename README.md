@@ -22,7 +22,7 @@ npm install \
 > @ample-launchpad/ui and @ample-launchpad/client packages are intended to be used in tandem with @near-wallet-selector.
 > Please setup wallet selector before using these packages.
 > see [example/](https://github.com/AmpleProtocol/launchpad/tree/master/example) for a complete @near-wallet-selector + @ample-launchpad integration
-```typescript 
+```tsx 
 import { useState, useEffect } from 'react'
 import { walletSelector } from 'your-wallet-selector-setup'
 import { Launchpad, setupLaunchpad } from '@ample-launchpad/client'
@@ -67,7 +67,7 @@ const ExampleApp = () => {
 
 ### Hook
 The `@ample-launchpad/ui` package ships a `useLaunchpad` hook to interact with both server and contracts instances.
-```typescript
+```tsx
 import { useLaunchpad } from '@ample-launchpad/ui'
 import { IContent } from '@ample-launchpad/client'
 
@@ -95,7 +95,7 @@ const SomeComponent = () => {
 
 ### React components
 Three ready-to-go react components are also provided by `@ample-launchpad/ui`, `<Launch/>`, `<Royalty/>` and `<Player/>`.
-```typescript 
+```tsx 
 import { Launch } from "@ample-launchpad/ui"
 
 const SomeOtherComponent = () => {
@@ -110,3 +110,8 @@ const SomeOtherComponent = () => {
 
 ## Contributing
 Check our [contribution guidelines](https://github.com/AmpleProtocol/launchpad/tree/master/CONTRIBUTING.md) to learn how you can start contributing to the Ample Launchpad.
+
+## Testing 
+```sh 
+pnpm test
+```

@@ -11,7 +11,7 @@ npm install \
 ```
 
 ### Init launchpad 
-```typescript 
+```tsx 
 // @ample-launchpad/ui and @ample-launchpad/client packages are intended to be used in tandem with @near-wallet-selector.
 // Please setup wallet selector before using these packages.
 // see example/ for a complete @near-wallet-selector + @ample-launchpad integration
@@ -60,7 +60,7 @@ const ExampleApp = () => {
 ### Hooks
 #### useLaunchpad
 This is the main hook to interact with the launchpad, it allows you to access the `Launchpad` instance created during setup.
-```typescript
+```tsx
 import { useLaunchpad } from '@ample-launchpad/ui'
 import { IContent } from '@ample-launchpad/client'
 
@@ -91,7 +91,7 @@ This hook will take care of the tokengated streaming process by asking the user 
 
 Here is an example of how to use the `useStreaming` hook along with the Livepeer player component:
 > The following setup is needed to get [Livepeer](https://livepeer.org) metrics working properly. See https://docs.livepeer.org/developers/guides/get-engagement-analytics-via-api#registering-views for more information
-```typescript
+```tsx
 import { useStreaming } from "@ample-launchpad/ui"
 import { getSrc } from "@livepeer/react/external";
 import * as LivepeerPlayer from "@livepeer/react/player";
@@ -121,7 +121,7 @@ export const CustomPlayer: React.FC<IProps> = ({ contentId, title }) => {
 
 ### React components
 #### `<Launch />`
-```typescript 
+```tsx 
 import { Launch } from "@ample-launchpad/ui"
 
 const SomeOtherComponent = () => {
@@ -134,7 +134,7 @@ const SomeOtherComponent = () => {
 ```
 
 #### `<Royalty />`
-```typescript
+```tsx
 import { Royalty } from "@ample-launchpad/ui"
 
 const AnotherOne = () => {
@@ -144,7 +144,7 @@ const AnotherOne = () => {
 
 #### `<Player />`
 > This player component handles only the tokengated side of the streaming process. It is not yet capable of sending metrics to the chosen provider. For integrating a custom player with a per-provider metrics system, please see the [useStreaming](#usestreaming) hook.
-```typescript 
+```tsx 
 import { Player } from "@ample-launchpad/ui"
 
 const contentId = 'some-content-id'

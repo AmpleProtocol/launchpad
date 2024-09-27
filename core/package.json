@@ -11,7 +11,7 @@
 		"dist/**/*.mjs"
 	],
 	"scripts": {
-		"test": "vitest",
+		"test": "vitest run",
 		"build": "tsup src/index.ts --format cjs,esm --dts",
 		"prepublish": "npm run build",
 		"publish": "npm publish --access public"
