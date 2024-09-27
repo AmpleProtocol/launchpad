@@ -4,7 +4,9 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "cd ./treasury && cargo test"
+		"test": "pnpm run test:treasury && pnpm run test:series",
+		"test:treasury": "cd ./treasury && cargo test",
+		"test:series": "cd ./series && cargo test"
 	},
 	"keywords": [],
 	"author": "",
