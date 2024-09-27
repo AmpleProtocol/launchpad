@@ -41,7 +41,7 @@ impl Contract {
     pub fn add_content(&mut self, content: ReceivedContent, collection: ReceivedCollection) {
         assert!(
             env::predecessor_account_id() == self.series_contract_address,
-            "This method can only be called by the nft series contract"
+            "Only Series NFT contract can call this method"
         );
 
         // create a Content record with ReceivedContent

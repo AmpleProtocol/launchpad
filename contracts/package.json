@@ -1,0 +1,12 @@
+{
+	"name": "contracts",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "cd ./treasury && cargo test"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}

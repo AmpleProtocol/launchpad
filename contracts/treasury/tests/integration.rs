@@ -43,7 +43,12 @@ pub struct Claim {
 
 // CUSTOM LOGIC FOR THE CONTRACT STRUCT
 trait CustomLogic {
-    async fn add_content(&self, owner: &Account, content_id: String) -> color_eyre::Result<()>;
+    async fn add_content(
+        &self,
+        series_contract: &Account,
+        owner: &Account,
+        content_id: String,
+    ) -> color_eyre::Result<()>;
     async fn calculate_royalties(
         &self,
         account_id: &AccountId,
@@ -56,10 +61,15 @@ trait CustomLogic {
     ) -> color_eyre::Result<u128>;
 }
 impl CustomLogic for Contract {
-    async fn add_content(&self, owner: &Account, content_id: String) -> color_eyre::Result<()> {
+    async fn add_content(
+        &self,
+        series_contract: &Account,
+        owner: &Account,
+        content_id: String,
+    ) -> color_eyre::Result<()> {
         // 1. create some fake content
-        let _ = self
-            .call("add_content")
+        let _ = series_contract
+            .call(self.id(), "add_content")
             .args_json(json!({
                 "content": {
                     "content_id": content_id,
@@ -152,11 +162,15 @@ async fn test_contents() -> color_eyre::Result<()> {
         contract,
         alice,
         bob: _,
-        series_contract: _,
+        series_contract,
     } = init().await?;
 
-    contract.add_content(&alice, "hola".to_string()).await?;
-    contract.add_content(&alice, "quetal".to_string()).await?;
+    contract
+        .add_content(&series_contract, &alice, "hola".to_string())
+        .await?;
+    contract
+        .add_content(&series_contract, &alice, "quetal".to_string())
+        .await?;
 
     // 2. verify the content was created indeed
     let content_received = contract
@@ -341,7 +355,7 @@ async fn test_security() -> color_eyre::Result<()> {
     assert!(content_result
         .unwrap_err()
         .to_string()
-        .contains(ACCESS_DENIED_ERROR));
+        .contains(NOT_SERIES_CONTRACT_ERROR));
 
     Ok(())
 }
@@ -357,7 +371,9 @@ async fn test_royalties() -> color_eyre::Result<()> {
 
     let content_id = "someidblabla".to_string();
 
-    contract.add_content(&alice, content_id.clone()).await?;
+    contract
+        .add_content(&series_contract, &alice, content_id.clone())
+        .await?;
 
     let up_holder_result_should_fail = contract
         .call("update_holder")
