@@ -111,7 +111,22 @@ const SomeOtherComponent = () => {
 ## Contributing
 Check our [contribution guidelines](https://github.com/AmpleProtocol/launchpad/tree/master/CONTRIBUTING.md) to learn how you can start contributing to the Ample Launchpad.
 
-## Testing 
+## Testing guide
+### Running the `example/` dapp
+1. Install dependencies 
+```sh 
+pnpm install
+```
+2. Create `.env` file for the `example/` project (see [.env.template](https://github.com/AmpleProtocol/launchpad/blob/master/example/.env.template))
+3. Create `.env` file for the `server/` project (see [.env.template](https://github.com/AmpleProtocol/launchpad/blob/master/example/.env.template))
+4. Start dev processes
+```sh 
+pnpm dev
+```
+5. Check it out at http://localhost:3000
+
+
+### Integration + unit tests
 ```sh 
 pnpm test
 ```
